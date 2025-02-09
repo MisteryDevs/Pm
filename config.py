@@ -21,8 +21,8 @@ DURATION_LIMIT_MIN = int(getenv("DURATION_LIMIT", 10000))
 # Chat id of a group for logging bot's activities
 LOGGER_ID = int(getenv("LOGGER_ID", None))
 
-# Get this value from @purvi_music_bot on Telegram by /id
-OWNER_ID = int(getenv("OWNER_ID", 7403621976))
+
+OWNER_ID = int(getenv("OWNER_ID", 7096860602))
 
 ## Fill these variables if you're deploying on heroku.
 # Your heroku app name
@@ -39,8 +39,8 @@ GIT_TOKEN = getenv(
     "GIT_TOKEN", None
 )  # Fill this variable if your upstream repository is private
 
-SUPPORT_CHANNEL = getenv("SUPPORT_CHANNEL", "https://t.me/PURVI_SUPPORT")
-SUPPORT_CHAT = getenv("SUPPORT_CHAT", "https://t.me/PURVI_UPDATES")
+SUPPORT_CHANNEL = getenv("SUPPORT_CHANNEL", "https://t.me/APNA_CLUB_09")
+SUPPORT_CHAT = getenv("SUPPORT_CHAT", "https://t.me/SWEETY_BOT_UPDATE")
 
 # Set this to True if you want the assistant to automatically leave chats after an interval
 AUTO_LEAVING_ASSISTANT = bool(getenv("AUTO_LEAVING_ASSISTANT", False))
