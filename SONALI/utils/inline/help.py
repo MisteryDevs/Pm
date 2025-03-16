@@ -2,7 +2,7 @@ from typing import Union
 
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-from PRINCE import app
+from SONALI import app
 
 
 def help_pannel(_, START: Union[bool, int] = None, page: int = 1):
