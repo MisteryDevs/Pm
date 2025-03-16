@@ -45,10 +45,10 @@ async def must_join_channel(app: Client, msg: Message):
             try:
                 await msg.reply_photo(
                     random.choice(IMAGE),
-                    caption=f"💖 **ʜᴇʏ ᴛʜᴇʀᴇ! ɴɪᴄᴇ ᴛᴏ ᴍᴇᴇᴛ ʏᴏᴜ.**\n\n"
-                            f"🚀 **ᴛᴏ ᴜsᴇ 🎵 𝐒ᴡᴇᴇᴛʏ 𝐌ᴜsɪᴄ™, ᴘʟᴇᴀsᴇ ᴊᴏɪɴ ᴏᴜʀ ᴄʜᴀɴɴᴇʟ ғɪʀsᴛ!**\n"
-                            f"🔹 **Jᴏɪɴ ᴀɴᴅ ᴜɴʟᴏᴄᴋ ᴀʟʟ ᴍʏ ᴄᴏᴍᴍᴀɴᴅs** 💫\n\n"
-                            f"🎯 **Cʟɪᴄᴋ ᴛʜᴇ ʙᴜᴛᴛᴏɴs ʙᴇʟᴏᴡ:**",
+                    caption=f"💖 ʜᴇʏ ᴛʜᴇʀᴇ! ɴɪᴄᴇ ᴛᴏ ᴍᴇᴇᴛ ʏᴏᴜ.\n\n"
+                            f"🚀 **ᴛᴏ ᴜsᴇ 🎵 •⏤‌𝄞⃝🍧 ‌⃪‌𝐒ᴡᴇᴇᴛʏ 𝐌ᴜsɪᴄ♥️꯭꯭꯭꯭ ꯭꯭᪳𝆺𝅥, ᴘʟᴇᴀsᴇ ᴊᴏɪɴ ᴏᴜʀ ᴄʜᴀɴɴᴇʟ ғɪʀsᴛ!\n"
+                            f"🔹 **Jᴏɪɴ ᴀɴᴅ ᴜɴʟᴏᴄᴋ ᴀʟʟ ᴍʏ ᴄᴏᴍᴍᴀɴᴅs 💫\n\n"
+                            f"🎯 Cʟɪᴄᴋ ᴛʜᴇ ʙᴜᴛᴛᴏɴs ʙᴇʟᴏᴡ:",
                     reply_markup=InlineKeyboardMarkup(
                         [
                             [
@@ -62,4 +62,4 @@ async def must_join_channel(app: Client, msg: Message):
             except ChatWriteForbidden:
                 pass
     except ChatAdminRequired:
-        print(f"⚠️ **ᴘʟᴇᴀsᴇ ᴍᴀᴋᴇ ᴍᴇ ᴀɴ ᴀᴅᴍɪɴ ɪɴ {MUST_JOIN} ғɪʀsᴛ!**")
+        print(f"⚠️ ᴘʟᴇᴀsᴇ ᴍᴀᴋᴇ ᴍᴇ ᴀɴ ᴀᴅᴍɪɴ ɪɴ {MUST_JOIN} ғɪʀsᴛ!")
