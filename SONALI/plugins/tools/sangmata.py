@@ -11,44 +11,46 @@ from SONALI.core.userbot import assistants
 
 @app.on_message(filters.command("sg"))
 async def sg(client: Client, message: Message):
-    if len(message.text.split()) < 1 and not message.reply_to_message:
-        return await message.reply("sg username/id/reply")
-    if message.reply_to_message:
-        args = message.reply_to_message.from_user.id
-    else:
-        args = message.text.split()[1]
-    lol = await message.reply("🧨")
-    if args:
-        try:
-            user = await client.get_users(f"{args}")
-        except Exception:
-            return await lol.edit("✦ <code>Please specify a valid user!</code>")
-    bo = ["sangmata_bot", "sangmata_beta_bot"]
-    sg = random.choice(bo)
-    if 1 in assistants:
-        ubot = us.one
-    
-    try:
-        a = await ubot.send_message(sg, f"{user.id}")
-        await a.delete()
-    except Exception as e:
-        return await lol.edit(e)
-    await asyncio.sleep(1)
-    
-    async for stalk in ubot.search_messages(a.chat.id):
-        if stalk.text == None:
-            continue
-        if not stalk:
-            await message.reply("botnya ngambek")
-        elif stalk:
-            await message.reply(f"{stalk.text}")
-            break  # Exit the loop after displaying one message
-    
-    try:
-        user_info = await ubot.resolve_peer(sg)
-        await ubot.send(DeleteHistory(peer=user_info, max_id=0, revoke=True))
-    except Exception:
-        pass
-    
-    await lol.delete()
+    if not message.reply_to_message and len(message.text.split()) < 2:
+        return await message.reply(
+            "✦ <b>Usage:</b>\n"
+            "➤ <code>/sg @username</code> - Username se search kare\n"
+            "➤ <code>/sg user_id</code> - User ID se search kare\n"
+            "➤ Tag karke <code>/sg</code> likhein - Tag wale user ki info lene ke liye"
+        )
 
+    args = message.reply_to_message.from_user.id if message.reply_to_message else message.text.split()[1]
+
+    lol = await message.reply("🧨 Searching...")
+
+    try:
+        user = await client.get_users(args)
+    except Exception:
+        return await lol.edit("✦ <code>Invalid username or ID! Please provide a valid user.</code>")
+
+    bots = ["sangmata_bot", "sangmata_beta_bot"]
+    sg_bot = random.choice(bots)
+
+    if not assistants:  # Ensure there is at least one assistant
+        return await lol.edit("✦ <code>No assistant bots are available.</code>")
+
+    ubot = us.one  # Assuming `us.one` is an active userbot session
+
+    try:
+        a = await ubot.send_message(sg_bot, str(user.id))
+        await asyncio.sleep(2)  # Allow time for the bot to respond
+
+        async for stalk in ubot.search_messages(sg_bot):
+            if stalk.text:
+                await message.reply(stalk.text)
+                break
+        else:
+            await message.reply("✦ <code>The bot did not return any information.</code>")
+
+        # Clear chat history with the bot
+        await ubot.send(DeleteHistory(peer=sg_bot, max_id=0, revoke=True))
+
+    except Exception as e:
+        return await lol.edit(f"✦ <code>Error:</code> {e}")
+
+    await lol.delete()
