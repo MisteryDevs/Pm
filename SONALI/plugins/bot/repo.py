@@ -14,7 +14,7 @@ async def start(_, msg):
     buttons = [
         [
           InlineKeyboardButton("sᴜᴘᴘᴏʀᴛ", url="https://t.me/SWEETY_BOT_UPDATE"),
-          InlineKeyboardButton("ʀᴇᴘᴏ", url="https://t.me/MUSICCCCCCCCCCCC_PUR/200")
+          InlineKeyboardButton("ʀᴇᴘᴏ", url="https://princesinff.serv00.net/")
           ],
     ]
     
