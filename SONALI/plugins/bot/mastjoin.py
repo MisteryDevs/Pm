@@ -46,8 +46,8 @@ async def must_join_channel(app: Client, msg: Message):
                 await msg.reply_photo(
                     random.choice(IMAGE),
                     caption=f"💖 ʜᴇʏ ᴛʜᴇʀᴇ! ɴɪᴄᴇ ᴛᴏ ᴍᴇᴇᴛ ʏᴏᴜ.\n\n"
-                            f"🚀 **ᴛᴏ ᴜsᴇ 🎵 •⏤‌𝄞⃝🍧 ‌⃪‌𝐒ᴡᴇᴇᴛʏ 𝐌ᴜsɪᴄ♥️꯭꯭꯭꯭ ꯭꯭᪳𝆺𝅥, ᴘʟᴇᴀsᴇ ᴊᴏɪɴ ᴏᴜʀ ᴄʜᴀɴɴᴇʟ ғɪʀsᴛ!\n"
-                            f"🔹 **Jᴏɪɴ ᴀɴᴅ ᴜɴʟᴏᴄᴋ ᴀʟʟ ᴍʏ ᴄᴏᴍᴍᴀɴᴅs 💫\n\n"
+                            f"🚀 ᴛᴏ ᴜsᴇ 🎵 •⏤‌𝄞⃝🍧 ‌⃪‌𝐒ᴡᴇᴇᴛʏ 𝐌ᴜsɪᴄ♥️꯭꯭꯭꯭ ꯭꯭᪳𝆺𝅥, ᴘʟᴇᴀsᴇ ᴊᴏɪɴ ᴏᴜʀ ᴄʜᴀɴɴᴇʟ ғɪʀsᴛ!\n"
+                            f"🔹 Jᴏɪɴ ᴀɴᴅ ᴜɴʟᴏᴄᴋ ᴀʟʟ ᴍʏ ᴄᴏᴍᴍᴀɴᴅs 💫\n\n"
                             f"🎯 Cʟɪᴄᴋ ᴛʜᴇ ʙᴜᴛᴛᴏɴs ʙᴇʟᴏᴡ:",
                     reply_markup=InlineKeyboardMarkup(
                         [
