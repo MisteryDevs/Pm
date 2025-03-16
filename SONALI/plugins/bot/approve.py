@@ -3,22 +3,14 @@ from os import environ
 from pyrogram import filters
 from pyrogram.types import ChatJoinRequest, InlineKeyboardButton, InlineKeyboardMarkup
 
-# Define Inline Buttons (Enhanced)
+# Define Inline Button (Only Add Me)
 BUTTONS = InlineKeyboardMarkup(
     [
         [
-            InlineKeyboardButton("➕ ᴀᴅᴅ ᴍᴇ ᴛᴏ ʏᴏᴜʀ ɢʀᴏᴜᴘ", url="https://t.me/Sweety_music09_BOT?startgroup=true")
-        ],
-        [
-            InlineKeyboardButton("🎵 ᴘʟᴀʏ ᴍᴜsɪᴄ", url="https://t.me/Sweety_music09_BOT"),
-            InlineKeyboardButton("💬 ɢʀᴏᴜᴘ sᴜᴘᴘᴏʀᴛ", url="https://t.me/APNA_CLUB_09")
+            InlineKeyboardButton(" ➕ ᴀᴅᴅ ᴍᴇ ᴛᴏ ʏᴏᴜʀ ɢʀᴏᴜᴘ ➕", url="https://t.me/Sweety_music09_BOT?startgroup=true")
         ]
     ]
 )
-
-# Extract environment variables
-chat_id_env = environ.get("CHAT_ID")
-CHAT_ID = [int(x) for x in chat_id_env.split(",")] if chat_id_env else []
 
 # Default approval state (in-memory)
 APPROVAL_STATE = True  # Start with auto-approval ON
@@ -28,10 +20,7 @@ WELCOME_TEXT = (
     "🌟 ᴡᴇʟᴄᴏᴍᴇ, {mention}! 🌟\n\n"
     "🎶 ᴛᴏ ➥ {title} 🎵\n\n"
     "💖 ʏᴏᴜ'ᴠᴇ ʙᴇᴇɴ ᴀᴜᴛᴏ-ᴀᴘᴘʀᴏᴠᴇᴅ! 🎉\n"
-    "✨ ᴇɴᴊᴏʏ ᴍᴜsɪᴄ & ɢʀᴏᴏᴠᴇ ʟɪᴋᴇ ɴᴇᴠᴇʀ ʙᴇғᴏʀᴇ! ✨\n\n"
-    "📌 ᴄᴏᴍᴍᴀɴᴅs ➥ /play, /pause, /skip, /stop**\n"
-    "📌 ɢᴇᴛ sᴜᴘᴘᴏʀᴛ ➥ @SweetyMusicSupport**\n\n"
-    "🔥 ʟᴇᴛ'ꜱ  ᴍᴀᴋᴇ ᴛʜɪꜱ ɢʀᴏᴜᴘ ᴍᴏʀᴇ ᴍᴜsɪᴄᴀʟ!** 🔥"
+    "✨ ᴇɴᴊᴏʏ ᴍᴜsɪᴄ & ɢʀᴏᴏᴠᴇ ʟɪᴋᴇ ɴᴇᴠᴇʀ ʙᴇғᴏʀᴇ! ✨\n"
 )
 
 # Auto-Approval Event Handler
