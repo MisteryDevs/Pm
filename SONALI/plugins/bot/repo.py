@@ -1,6 +1,6 @@
 from pyrogram import filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
-from TanuMusic import app
+from SONALI import app
 from config import BOT_USERNAME
 
 start_txt = """
