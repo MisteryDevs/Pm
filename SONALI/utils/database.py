@@ -3,9 +3,7 @@ from typing import Dict, List, Union
 
 from SONALI import userbot
 from SONALI.core.mongo import mongodb
-from SONALI.utils.mongo import db
 
-afkdb = db.afk
 authdb = mongodb.adminauth
 authuserdb = mongodb.authuser
 autoenddb = mongodb.autoend
@@ -40,13 +38,25 @@ playmode = {}
 playtype = {}
 skipmode = {}
 
-async def add_wlcm(chat_id: int):
-    return await wlcm.insert_one({"chat_id": chat_id})
 
-async def rm_wlcm(chat_id: int):   
-    chat = await wlcm.find_one({"chat_id": chat_id})
-    if chat: 
-        return await wlcm.delete_one({"chat_id": chat_id})
+
+#connect 
+async def connect_to_chat(user_id: int, chat_id: int):
+    existing = await connectdb.find_one({'user_id': user_id, 'chat_id': chat_id})
+    if existing:
+        return True
+
+    result = await connectdb.update_one(
+        {'user_id': user_id},
+        {'$set': {'chat_id': chat_id}},
+        upsert=True
+    )
+    
+    return result.modified_count > 0 or result.upserted_id is not None
+
+async def get_connected_chat(user_id: int):
+    user = await connectdb.find_one({'user_id': user_id}, {'_id': 0, 'chat_id': 1})
+    return user['chat_id'] if user and 'chat_id' in user else False
 
 
 async def get_assistant_number(chat_id: int) -> str:
@@ -116,34 +126,6 @@ async def get_assistant(chat_id: int) -> str:
             userbot = await set_assistant(chat_id)
             return userbot
 
-async def is_afk(user_id: int) -> bool:
-    user = await afkdb.find_one({"user_id": user_id})
-    if not user:
-        return False, {}
-    return True, user["reason"]
-
-
-async def add_afk(user_id: int, mode):
-    await afkdb.update_one(
-        {"user_id": user_id}, {"$set": {"reason": mode}}, upsert=True
-    )
-
-
-async def remove_afk(user_id: int):
-    user = await afkdb.find_one({"user_id": user_id})
-    if user:
-        return await afkdb.delete_one({"user_id": user_id})
-
-
-async def get_afk_users() -> list:
-    users = afkdb.find({"user_id": {"$gt": 0}})
-    if not users:
-        return []
-    users_list = []
-    for user in await users.to_list(length=1000000000):
-        users_list.append(user)
-    return users_list
-  
 
 async def set_calls_assistant(chat_id):
     from SONALI.core.userbot import assistants
