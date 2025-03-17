@@ -1,4 +1,3 @@
-# Importing important modules & bot
 from SONALI import app
 from typing import Union
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
@@ -8,9 +7,9 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 # Creating first partition of menu
 def first_page(_):
     controll_button = [
-        InlineKeyboardButton(text="◁", callback_data="first_page_back"), 
-        InlineKeyboardButton(text="HOME", callback_data="settingsback_helper"), 
-        InlineKeyboardButton(text="▷", callback_data="open_second_page")
+        InlineKeyboardButton(text="◁", callback_data="none"),
+        InlineKeyboardButton(text="HOME", callback_data="settingsback_helper"),
+        InlineKeyboardButton(text="▷", callback_data="go_to_second")
     ]
     first_page_menu = InlineKeyboardMarkup(
         [
@@ -22,13 +21,12 @@ def first_page(_):
     )
     return first_page_menu
 
-
 # Creating second partition of menu
 def second_page(_):
     controll_button = [
-        InlineKeyboardButton(text="◁", callback_data="open_first_page"), 
-        InlineKeyboardButton(text="HOME", callback_data="settingsback_helper"), 
-        InlineKeyboardButton(text="▷", callback_data="open_third_page")
+        InlineKeyboardButton(text="◁", callback_data="go_to_first"),
+        InlineKeyboardButton(text="HOME", callback_data="settingsback_helper"),
+        InlineKeyboardButton(text="▷", callback_data="go_to_third")
     ]
     second_page_menu = InlineKeyboardMarkup(
         [
@@ -40,13 +38,12 @@ def second_page(_):
     )
     return second_page_menu
 
-
 # Creating third partition of menu
 def third_page(_):
     controll_button = [
-        InlineKeyboardButton(text="◁", callback_data="open_second_page"), 
-        InlineKeyboardButton(text="HOME", callback_data="settingsback_helper"), 
-        InlineKeyboardButton(text="▷", callback_data="open_fourth_page")
+        InlineKeyboardButton(text="◁", callback_data="go_to_second"),
+        InlineKeyboardButton(text="HOME", callback_data="settingsback_helper"),
+        InlineKeyboardButton(text="▷", callback_data="go_to_fourth")
     ]
     third_page_menu = InlineKeyboardMarkup(
         [
@@ -58,12 +55,12 @@ def third_page(_):
     )
     return third_page_menu
 
-
 # Creating fourth partition of menu
 def fourth_page(_):
     controll_button = [
-        InlineKeyboardButton(text="◁", callback_data="open_third_page"), 
-        InlineKeyboardButton(text="HOME", callback_data="settingsback_helper"), 
+        InlineKeyboardButton(text="◁", callback_data="go_to_third"),
+        InlineKeyboardButton(text="HOME", callback_data="settingsback_helper"),
+        InlineKeyboardButton(text="▷", callback_data="none")
     ]
     fourth_page_menu = InlineKeyboardMarkup(
         [
@@ -74,14 +71,10 @@ def fourth_page(_):
     )
     return fourth_page_menu
 
-
-# Just a common button
+# Back button function
 def help_back_markup(_):
-    upl = InlineKeyboardMarkup([[InlineKeyboardButton(text=_["BACK_BUTTON"], callback_data="settings_back_helper")]])
-    return upl
+    return InlineKeyboardMarkup([[InlineKeyboardButton(text=_["BACK_BUTTON"], callback_data="settings_back_helper")]])
 
-
-# Ease of access
+# Private help panel function
 def private_help_panel(_):
-    buttons = [[InlineKeyboardButton(text=_["S_B_4"], url=f"https://t.me/{app.username}?start=help")]]
-    return buttons
+    return [[InlineKeyboardButton(text=_["S_B_4"], url=f"https://t.me/{app.username}?start=help")]]
