@@ -112,7 +112,25 @@ async def helper_cb(client, CallbackQuery, _):
     elif cb == "hb15":
         await CallbackQuery.edit_message_text(helpers.HELP_15, reply_markup=keyboard)
     elif cb == "hb16":
-        await CallbackQuery.edit_message_text(helpers.HELP_16, reply_markup=keyboard)
+    await CallbackQuery.edit_message_text(helpers.HELP_16, reply_markup=keyboard)
+    elif cb == "hb17":
+    await CallbackQuery.edit_message_text(helpers.HELP_17, reply_markup=keyboard)
+    elif cb == "hb18":
+    await CallbackQuery.edit_message_text(helpers.HELP_18, reply_markup=keyboard)
+    elif cb == "hb19":
+    await CallbackQuery.edit_message_text(helpers.HELP_19, reply_markup=keyboard)
+    elif cb == "hb20":
+    await CallbackQuery.edit_message_text(helpers.HELP_20, reply_markup=keyboard)
+    elif cb == "hb21":
+    await CallbackQuery.edit_message_text(helpers.HELP_21, reply_markup=keyboard)
+    elif cb == "hb22":
+    await CallbackQuery.edit_message_text(helpers.HELP_22, reply_markup=keyboard)
+    elif cb == "hb23":
+    await CallbackQuery.edit_message_text(helpers.HELP_23, reply_markup=keyboard)
+    elif cb == "hb24":
+    await CallbackQuery.edit_message_text(helpers.HELP_24, reply_markup=keyboard)
+    elif cb == "hb25":
+        await CallbackQuery.edit_message_text(helpers.HELP_25, reply_markup=keyboard)
 
 Dil_Text = ("ᴄʜᴏᴏsᴇ ᴛʜᴇ ᴄᴀᴛᴇɢᴏʀʏ ғᴏʀ ᴡʜɪᴄʜ ʏᴏᴜ ᴡᴀɴɴᴀ ɢᴇᴛ ʜᴇʟᴩ.\nᴀsᴋ ʏᴏᴜʀ ᴅᴏᴜʙᴛs ᴀᴛ <a href={0}>sᴜᴘᴘᴏʀᴛ ᴄʜᴀᴛ</a>\n\nᴀʟʟ ᴄᴏᴍᴍᴀɴᴅs ᴄᴀɴ ʙᴇ ᴜsᴇᴅ ᴡɪᴛʜ: <code>/</code>")
 
