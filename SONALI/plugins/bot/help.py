@@ -1,5 +1,4 @@
 from typing import Union
-
 from pyrogram import filters, types
 from pyrogram.types import InlineKeyboardMarkup, Message
 
@@ -42,6 +41,7 @@ async def helper_private(client: app, update: Union[types.Message, types.Callbac
             reply_markup=keyboard,
         )
 
+
 @app.on_callback_query(filters.regex("settings_back_helper_fixed") & ~BANNED_USERS)
 async def helper_private(client: app, update: Union[types.Message, types.CallbackQuery]):
     is_callback = isinstance(update, types.CallbackQuery)
@@ -64,8 +64,6 @@ async def helper_private(client: app, update: Union[types.Message, types.Callbac
         _ = get_string(language)
         keyboard = first_page(_)
         await update.reply_photo(photo=START_IMG_URL, caption=_["help_1"].format(SUPPORT_CHAT), reply_markup=keyboard)
-    
-
 
 
 @app.on_message(filters.command(["help"]) & filters.group & ~BANNED_USERS)
@@ -81,6 +79,7 @@ async def helper_cb(client, CallbackQuery, _):
     callback_data = CallbackQuery.data.strip()
     cb = callback_data.split(None, 1)[1]
     keyboard = help_back_markup(_)
+
     if cb == "hb1":
         await CallbackQuery.edit_message_text(helpers.HELP_1, reply_markup=keyboard)
     elif cb == "hb2":
@@ -112,27 +111,31 @@ async def helper_cb(client, CallbackQuery, _):
     elif cb == "hb15":
         await CallbackQuery.edit_message_text(helpers.HELP_15, reply_markup=keyboard)
     elif cb == "hb16":
-    await CallbackQuery.edit_message_text(helpers.HELP_16, reply_markup=keyboard)
+        await CallbackQuery.edit_message_text(helpers.HELP_16, reply_markup=keyboard)
     elif cb == "hb17":
-    await CallbackQuery.edit_message_text(helpers.HELP_17, reply_markup=keyboard)
+        await CallbackQuery.edit_message_text(helpers.HELP_17, reply_markup=keyboard)
     elif cb == "hb18":
-    await CallbackQuery.edit_message_text(helpers.HELP_18, reply_markup=keyboard)
+        await CallbackQuery.edit_message_text(helpers.HELP_18, reply_markup=keyboard)
     elif cb == "hb19":
-    await CallbackQuery.edit_message_text(helpers.HELP_19, reply_markup=keyboard)
+        await CallbackQuery.edit_message_text(helpers.HELP_19, reply_markup=keyboard)
     elif cb == "hb20":
-    await CallbackQuery.edit_message_text(helpers.HELP_20, reply_markup=keyboard)
+        await CallbackQuery.edit_message_text(helpers.HELP_20, reply_markup=keyboard)
     elif cb == "hb21":
-    await CallbackQuery.edit_message_text(helpers.HELP_21, reply_markup=keyboard)
+        await CallbackQuery.edit_message_text(helpers.HELP_21, reply_markup=keyboard)
     elif cb == "hb22":
-    await CallbackQuery.edit_message_text(helpers.HELP_22, reply_markup=keyboard)
+        await CallbackQuery.edit_message_text(helpers.HELP_22, reply_markup=keyboard)
     elif cb == "hb23":
-    await CallbackQuery.edit_message_text(helpers.HELP_23, reply_markup=keyboard)
+        await CallbackQuery.edit_message_text(helpers.HELP_23, reply_markup=keyboard)
     elif cb == "hb24":
-    await CallbackQuery.edit_message_text(helpers.HELP_24, reply_markup=keyboard)
+        await CallbackQuery.edit_message_text(helpers.HELP_24, reply_markup=keyboard)
     elif cb == "hb25":
         await CallbackQuery.edit_message_text(helpers.HELP_25, reply_markup=keyboard)
 
-Dil_Text = ("ᴄʜᴏᴏsᴇ ᴛʜᴇ ᴄᴀᴛᴇɢᴏʀʏ ғᴏʀ ᴡʜɪᴄʜ ʏᴏᴜ ᴡᴀɴɴᴀ ɢᴇᴛ ʜᴇʟᴩ.\nᴀsᴋ ʏᴏᴜʀ ᴅᴏᴜʙᴛs ᴀᴛ <a href={0}>sᴜᴘᴘᴏʀᴛ ᴄʜᴀᴛ</a>\n\nᴀʟʟ ᴄᴏᴍᴍᴀɴᴅs ᴄᴀɴ ʙᴇ ᴜsᴇᴅ ᴡɪᴛʜ: <code>/</code>")
+
+Dil_Text = ("ᴄʜᴏᴏsᴇ ᴛʜᴇ ᴄᴀᴛᴇɢᴏʀʏ ғᴏʀ ᴡʜɪᴄʜ ʏᴏᴜ ᴡᴀɴɴᴀ ɢᴇᴛ ʜᴇʟᴩ.\n"
+           "ᴀsᴋ ʏᴏᴜʀ ᴅᴏᴜʙᴛs ᴀᴛ <a href={0}>sᴜᴘᴘᴏʀᴛ ᴄʜᴀᴛ</a>\n\n"
+           "ᴀʟʟ ᴄᴏᴍᴍᴀɴᴅs ᴄᴀɴ ʙᴇ ᴜsᴇᴅ ᴡɪᴛʜ: <code>/</code>")
+
 
 @app.on_callback_query(filters.regex("dilXaditi") & ~BANNED_USERS)
 @languageCB
@@ -140,9 +143,9 @@ async def first_pagexx(client, CallbackQuery, _):
     menu_next = second_page(_)
     try:
         await CallbackQuery.message.edit_text(Dil_Text, reply_markup=menu_next)
-        return
     except:
         return
+
 
 @app.on_callback_query(filters.regex("Adisa") & ~BANNED_USERS)
 @languageCB
@@ -150,10 +153,5 @@ async def first_pagee(client, CallbackQuery, _):
     menu_next = second_page(_)
     try:
         await CallbackQuery.message.edit_text(Dil_Text, reply_markup=menu_next)
-        return
     except:
         return
-
-
-# Do not try to change whole code, just add or remove what you want.
-# Credited To Dil(Adisa)
