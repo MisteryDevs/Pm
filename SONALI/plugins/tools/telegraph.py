@@ -33,7 +33,7 @@ async def get_link_group(client, message):
     elif media.document:
         file_size = media.document.file_size
 
-    if file_size > 200  1024  1024:
+    if file_size > 200 * 1024 * 1024:
         return await message.reply_text("Pʟᴇᴀsᴇ ᴘʀᴏᴠɪᴅᴇ ᴀ ᴍᴇᴅɪᴀ ғɪʟᴇ ᴜɴᴅᴇʀ 200MB.")
 
     try:
@@ -41,7 +41,7 @@ async def get_link_group(client, message):
 
         async def progress(current, total):
             try:
-                await text.edit_text(f"📥 Dᴏᴡɴʟᴏᴀᴅɪɴɢ... {current  100 / total:.1f}%")
+                await text.edit_text(f"📥 Dᴏᴡɴʟᴏᴀᴅɪɴɢ... {current * 100 / total:.1f}%")
             except Exception:
                 pass
 
