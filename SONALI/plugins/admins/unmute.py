@@ -1,7 +1,7 @@
 from SONALI import app
 from pyrogram import filters,enums
 from pyrogram.types import ChatPermissions 
-from SONALI.utils.SACHIN_BAN import admin_filter
+from SONALI.utils.PRINCE_BAN import admin_filter
 
 @app.on_message(filters.command("unmuteall") & admin_filter)
 async def unmute_all(_,msg):
