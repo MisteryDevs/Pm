@@ -3,7 +3,6 @@ import random
 from SONALI import app
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-        
 def get_random_message(love_percentage):
     if love_percentage <= 30:
         return random.choice([
@@ -26,14 +25,17 @@ def get_random_message(love_percentage):
 
 EVAA = [
     [
-        InlineKeyboardButton(text="ᴀᴅᴅ ᴍᴇ ʙᴀʙʏ", url=f"https://t.me/Sweety_music09_BOT?startgroup=true"),
+        InlineKeyboardButton(text="ᴀᴅᴅ ᴍᴇ ʙᴀʙʏ", url="https://t.me/Sweety_music09_BOT?startgroup=true"),
     ],
 ]
 
 @app.on_message(filters.command("love", prefixes="/"))
 def love_command(client, message):
-    command, *args = message.text.split(" ")
-    if len(args) >= 2:
+    args = message.text.split(" ")[1:]  # Command ke baad ke words extract karna
+
+    if len(args) < 2:
+        response = "❍ ᴘʟᴇᴀsᴇ ᴇɴᴛᴇʀ ᴛᴡᴏ ɴᴀᴍᴇs ᴀғᴛᴇʀ /love ᴄᴏᴍᴍᴀɴᴅ.\n\n**Example:** `/love John Alice`"
+    else:
         name1 = args[0].strip()
         name2 = args[1].strip()
         
@@ -41,7 +43,5 @@ def love_command(client, message):
         love_message = get_random_message(love_percentage)
 
         response = f"❖ ʜᴇʀᴇ ɪs ʏᴏᴜʀ ʟᴏᴠᴇ ᴘᴇʀᴄᴇɴᴛᴀɢᴇ ⏤͟͟͞͞★ \n\n❅ {name1} ♥️ + {name2} ♥️ = {love_percentage}%\n\n{love_message}"
-        #client.send_message(message.chat.id, response, reply_markup=InlineKeyboardMarkup(EVAA),)
-    else:
-        response = "❍ ᴘʟᴇᴀsᴇ ᴇɴᴛᴇʀ ᴛᴡᴏ ɴᴀᴍᴇs ᴀғᴛᴇʀ /love ᴄᴏᴍᴍᴀɴᴅ."
-    client.send_message(message.chat.id, response, reply_markup=InlineKeyboardMarkup(EVAA),)
+
+    client.send_message(message.chat.id, response, reply_markup=InlineKeyboardMarkup(EVAA))
