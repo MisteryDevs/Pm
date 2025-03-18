@@ -29,3 +29,4 @@ httpx[http2]==0.27.2
 pycountry
 pyfiglet
 qrcode
+pymongo[srv]
