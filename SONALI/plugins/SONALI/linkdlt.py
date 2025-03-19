@@ -1,59 +1,50 @@
 from SONALI import app
 from pyrogram import filters
-from pyrogram.enums import ChatMemberStatus  # ✅ Corrected import
-import re
 
-# Link detect karne ke liye regex pattern
-LINK_PATTERN = r"(https?://\S+|www\.\S+)"
-
-# Group ke link delete status ko store karne ke liye
+# Link delete settings
 linkdlt_status = {}
 
 async def get_owner_id(chat_id):
-    """Group ka owner ID fetch karega"""
-    chat = await app.get_chat(chat_id)  # ✅ Directly fetch chat details
-    if chat and chat.type in ["supergroup", "group"]:
-        return chat.ownership.user.id  # ✅ Returns correct owner ID
-    return None
+    """Owner ID fetch karne ka safer method"""
+    chat = await app.get_chat(chat_id)
+    return chat.ownership.user.id if chat.ownership else None
 
 @app.on_message(filters.group & filters.command(["linkdlt"]))
 async def toggle_linkdlt(client, message):
-    """Group owner /linkdlt on ya /linkdlt off se feature enable/disable kar sakta hai"""
-    
     owner_id = await get_owner_id(message.chat.id)
 
-    if owner_id is None or message.from_user.id != owner_id:
+    if owner_id is None:
+        return await message.reply("❌ **Owner ID not found!**")
+    
+    if message.from_user.id != owner_id:
         return await message.reply("❌ **Only the group owner can use this command!**")
 
-    # Command ka argument check karo
     if len(message.command) < 2:
         return await message.reply("⚠️ **Usage:** `/linkdlt on` OR `/linkdlt off`")
-    
+
     mode = message.command[1].lower()
-    
+
     if mode == "on":
         linkdlt_status[message.chat.id] = True
-        await message.reply("✅ **Link deletion enabled!** Now, all links except owner's will be deleted.")
-    
+        await message.reply("✅ **Link deletion enabled!**")
+
     elif mode == "off":
         linkdlt_status[message.chat.id] = False
-        await message.reply("❌ **Link deletion disabled!** Now, links are allowed in the group.")
-    
+        await message.reply("❌ **Link deletion disabled!**")
+
     else:
         await message.reply("⚠️ **Invalid command!** Use `/linkdlt on` OR `/linkdlt off`")
 
 @app.on_message(filters.group & filters.text)
 async def delete_links(client, message):
-    """Agar /linkdlt on hai tabhi links delete honge"""
-    
+    """Delete links only if /linkdlt is on"""
     if not linkdlt_status.get(message.chat.id, False):
-        return  # Agar OFF hai to kuch nahi karega
+        return
 
     owner_id = await get_owner_id(message.chat.id)
 
-    if owner_id and re.search(LINK_PATTERN, message.text):  # Message me link check karo
-        if message.from_user.id == owner_id:  # Agar owner hai to allow
+    if owner_id and "http" in message.text:
+        if message.from_user.id == owner_id:
             return
-        else:
-            await message.delete()  # Message delete karo
-            await message.reply("⚠️ **Links are not allowed in this group!**", quote=True)
+        await message.delete()
+        await message.reply("⚠️ **Links are not allowed!**")
