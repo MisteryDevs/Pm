@@ -1,7 +1,7 @@
 from SONALI import app
 from pyrogram import filters
+from pyrogram.enums import ChatMembersFilter
 import re
-import asyncio
 
 # Link detect karne ke liye regex pattern
 LINK_PATTERN = r"(https?://\S+|www\.\S+)"
@@ -11,7 +11,7 @@ linkdlt_status = {}
 
 async def get_owner_id(chat_id):
     """Group ka owner ID fetch karega"""
-    async for member in app.get_chat_members(chat_id, filter="administrators"):
+    async for member in app.get_chat_members(chat_id, filter=ChatMembersFilter.ADMINISTRATORS):
         if member.status == "creator":  # Owner check karo
             return member.user.id
     return None
