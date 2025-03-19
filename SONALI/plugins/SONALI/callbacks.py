@@ -1,7 +1,7 @@
 from pyrogram import filters
 from pyrogram.types import CallbackQuery
 
-from SONALI import Anony
+from SONALI import SONALI
 from SONALI.utils import gen_key
 from SONALI.modules.gen import gen_session
 
