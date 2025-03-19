@@ -5,9 +5,8 @@ from pyrogram import filters
 linkdlt_status = {}
 
 async def get_owner_id(chat_id):
-    """Owner ID fetch karne ka safer method"""
     chat = await app.get_chat(chat_id)
-    return chat.ownership.user.id if chat.ownership else None
+    return chat.creator.id if chat.creator else None
 
 @app.on_message(filters.group & filters.command(["linkdlt"]))
 async def toggle_linkdlt(client, message):
