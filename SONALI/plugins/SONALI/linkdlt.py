@@ -1,19 +1,19 @@
 from SONALI import app
 from pyrogram import filters
-from pyrogram.enums import ChatMembersFilter
+from pyrogram.enums import ChatMemberStatus  # ✅ Corrected import
 import re
 
 # Link detect karne ke liye regex pattern
 LINK_PATTERN = r"(https?://\S+|www\.\S+)"
 
-# Ye dictionary har group ka status store karegi
+# Group ke link delete status ko store karne ke liye
 linkdlt_status = {}
 
 async def get_owner_id(chat_id):
     """Group ka owner ID fetch karega"""
-    async for member in app.get_chat_members(chat_id, filter=ChatMembersFilter.ADMINISTRATORS):
-        if member.status == "creator":  # Owner check karo
-            return member.user.id
+    chat = await app.get_chat(chat_id)  # ✅ Directly fetch chat details
+    if chat and chat.type in ["supergroup", "group"]:
+        return chat.ownership.user.id  # ✅ Returns correct owner ID
     return None
 
 @app.on_message(filters.group & filters.command(["linkdlt"]))
@@ -21,8 +21,8 @@ async def toggle_linkdlt(client, message):
     """Group owner /linkdlt on ya /linkdlt off se feature enable/disable kar sakta hai"""
     
     owner_id = await get_owner_id(message.chat.id)
-    
-    if message.from_user.id != owner_id:
+
+    if owner_id is None or message.from_user.id != owner_id:
         return await message.reply("❌ **Only the group owner can use this command!**")
 
     # Command ka argument check karo
