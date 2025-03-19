@@ -31,3 +31,4 @@ pyfiglet
 qrcode
 pymongo[srv]
 gtts
+oldpyro
