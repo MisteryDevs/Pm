@@ -6,7 +6,7 @@ from pyrogram.errors import (
     PhoneCodeExpired, 
     SessionPasswordNeeded
 )
-from ChampuMusic import app  
+from SONALI import app  
 
 async def generate_session(client, message):
     user_id = message.from_user.id
