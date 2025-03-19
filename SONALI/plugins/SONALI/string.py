@@ -3,7 +3,7 @@ from pyrogram import Client, filters
 from pyrogram.errors import SessionPasswordNeeded
 
 # ✅ Bot Client (Ye tumhara existing bot hai)
-from ChampuMusic import app  
+from SONALI import app  
 
 async def generate_session(client, message):
     await message.reply_text("📢 **Telegram String Session Generator**\n\n📌 **Send Your API ID**")
