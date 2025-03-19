@@ -10,6 +10,7 @@ from SONALI import app
 
 async def generate_session(client, message):
     user_id = message.from_user.id
+
     try:
         # ✅ Step 1: API ID
         await message.reply_text("📢 **String Session Generator**\n\n💡 Send Your **API ID (Number)**:")
@@ -19,13 +20,15 @@ async def generate_session(client, message):
         if not api_id.isdigit():
             return await message.reply_text("❌ **Invalid API ID! Must be a number.**")
 
+        api_id = int(api_id)  # Convert to integer
+
         # ✅ Step 2: API HASH
-        await message.reply_text("🔑 **Send Your API HASH (32 characters)**:")
+        await message.reply_text("🔑 **Send Your API HASH (32 characters, lowercase):**")
         api_hash_msg = await client.listen(user_id)
         api_hash = api_hash_msg.text.strip()
 
-        if len(api_hash) != 32:
-            return await message.reply_text("❌ **Invalid API HASH! Must be 32 characters.**")
+        if len(api_hash) != 32 or not all(c.isalnum() for c in api_hash):
+            return await message.reply_text("❌ **Invalid API HASH! Must be 32 alphanumeric characters.**")
 
         # ✅ Step 3: Phone Number
         await message.reply_text("📞 **Send Your Phone Number (With Country Code, e.g., +919876543210):**")
@@ -36,7 +39,7 @@ async def generate_session(client, message):
             return await message.reply_text("❌ **Invalid Phone Number! Must start with `+` and be digits.**")
 
         # ✅ Creating Pyrogram Client
-        new_client = Client("string_session", api_id=int(api_id), api_hash=api_hash)
+        new_client = Client("string_session", api_id=api_id, api_hash=api_hash)
 
         await new_client.connect()
 
@@ -52,7 +55,7 @@ async def generate_session(client, message):
         phone_code = otp_msg.text.replace(" ", "").strip()
 
         try:
-            await new_client.sign_in(phone_number, phone_code, phone_code_hash=phone_code_hash)
+            await new_client.sign_in(phone_number=phone_number, phone_code=phone_code, phone_code_hash=phone_code_hash)
         except PhoneCodeInvalid:
             return await message.reply_text("❌ **Invalid OTP! Please check and try again.**")
         except PhoneCodeExpired:
