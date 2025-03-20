@@ -1,9 +1,11 @@
 from SONALI import app
 from pyrogram import filters
 from pyrogram.types import Message
+from pyrogram.enums import ChatMembersFilter  # ✅ सही Import
+
 import asyncio
 
-# टैगिंग ऑन/ऑफ स्टेटस
+# टैगिंग स्टेटस ट्रैक करने के लिए
 tagging_enabled = {}
 
 # ✅ @all या #all कमांड हैंडलर
@@ -13,7 +15,7 @@ async def tag_all(client, message: Message):
     user_id = message.from_user.id
 
     # ✅ चेक करें कि यूजर एडमिन है या नहीं (Fixed)
-    admins = [admin.user.id async for admin in client.get_chat_members(chat_id, filter="administrators")]
+    admins = [admin.user.id async for admin in client.get_chat_members(chat_id, filter=ChatMembersFilter.ADMINISTRATORS)]
     if user_id not in admins:
         return await message.reply_text("🚫 **सिर्फ एडमिन ही @all कमांड चला सकते हैं!**")
 
@@ -44,7 +46,7 @@ async def cancel_tagging(client, message: Message):
     user_id = message.from_user.id
 
     # ✅ चेक करें कि यूजर एडमिन है या नहीं (Fixed)
-    admins = [admin.user.id async for admin in client.get_chat_members(chat_id, filter="administrators")]
+    admins = [admin.user.id async for admin in client.get_chat_members(chat_id, filter=ChatMembersFilter.ADMINISTRATORS)]
     if user_id not in admins:
         return await message.reply_text("🚫 **सिर्फ एडमिन ही /cancel कमांड चला सकते हैं!**")
 
