@@ -42,22 +42,23 @@ async def start_message(client, message):
     ]
 
     # 🎭 STYLISH CAPTION 🎭  
-    caption_text = f"""
-╭─────────◆◇◆─────────╮
-  🎭 𝙷𝙴𝚈 !! {user_name}
-╰─────────◆◇◆─────────╯
-╭━━━〔 ɪɴғᴏʀᴍᴀᴛɪᴏɴ 〕━━━╮
-┣ 🤖 ɪ'ᴍ ᴀ sᴛʀɪɴɢ sᴇssɪᴏɴ ɢᴇɴᴇʀᴀᴛᴏʀ ʙᴏᴛ !  
-┣ 🚀 ᴜsᴇ ᴍᴇ ᴛᴏ ɢᴀɴᴇʀᴀᴛᴇ sᴇssɪᴏɴs
-┣ 🔥 sᴜᴘᴘᴏʀᴛ : ᴘʏʀᴏɢʀᴀᴍ | ᴛᴇʟᴇᴛʜᴏɴ | ɢʀᴀᴍᴊꜱ  
-┣ 🔒 ɴᴏ ɪᴅ ʟᴏɢᴏᴜᴛ ɪssᴜᴇ ! 
-╰━━━━━━━━━━━━━━━━━━╯  
+caption_text = f"""
+<b>╭─────────◆◇◆─────────╮</b>
+  🎭 <b>𝙷𝙴𝚈 !! {user_name}</b>
+<b>╰─────────◆◇◆─────────╯</b>
+<b>╭━━━〔 ɪɴғᴏʀᴍᴀᴛɪᴏɴ 〕━━━╮</b>
+┣  ɪ'ᴍ ᴀ sᴛʀɪɴɢ sᴇssɪᴏɴ ɢᴇɴᴇʀᴀᴛᴏʀ ʙᴏᴛ !  
+┣  ᴜsᴇ ᴍᴇ ᴛᴏ ɢᴇɴᴇʀᴀᴛᴇ sᴇssɪᴏɴs
+┣  sᴜᴘᴘᴏʀᴛ : ᴘʏʀᴏɢʀᴀᴍ | ᴛᴇʟᴇᴛʜᴏɴ | ɢʀᴀᴍᴊꜱ  
+┣  ɴᴏ ɪᴅ ʟᴏɢᴏᴜᴛ ɪssᴜᴇ ! 
+<b>╰━━━━━━━━━━━━━━━━━━╯</b>
 
-𝐏𝐨𝐰𝐞𝐫𝐞𝐝 𝐁𝐲 : [•⏤‌𝄞⃝🍧 ‌⃪‌𝐒ᴡᴇᴇᴛʏ 𝐌ᴜsɪᴄ♥️꯭꯭꯭꯭ ꯭꯭᪳𝆺𝅥](https://t.me/SWEETY_BOT_UPDATE) 
+<b>𝐏𝐨𝐰𝐞𝐫𝐞𝐝 𝐁𝐲 :</b> <a href='https://t.me/SWEETY_BOT_UPDATE'>•⏤‌𝄞⃝🍧 ‌⃪‌𝐒ᴡᴇᴇᴛʏ 𝐌ᴜsɪᴄ♥️꯭꯭꯭꯭ ꯭꯭᪳𝆺𝅥</a> 
 """
 
-    await message.reply_photo(
-        photo=photo_url,
-        caption=caption_text,
-        reply_markup=InlineKeyboardMarkup(buttons)
-    )
+await message.reply_photo(
+    photo=photo_url,
+    caption=caption_text,
+    reply_markup=InlineKeyboardMarkup(buttons),
+    parse_mode="HTML"  # ✅ Using HTML for proper formatting
+)
