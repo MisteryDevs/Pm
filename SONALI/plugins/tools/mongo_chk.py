@@ -18,7 +18,7 @@ SPAM_WINDOW_SECONDS = 5
 mongo_url_pattern = re.compile(r'mongodb(?:\+srv)?:\/\/[^\s]+')
 
 
-@app.on_message(filters.command("mongochk"))
+@app.on_message(filters.command("chkmongo"))
 async def mongo_command(client, message: Message):
     user_id = message.from_user.id
     current_time = time()
@@ -41,7 +41,7 @@ async def mongo_command(client, message: Message):
         user_last_message_time[user_id] = current_time
 
     if len(message.command) < 2:
-        await message.reply("Please enter your MongoDB URL after the command. Example: `/mongochk your_mongodb_url`")
+        await message.reply("Please enter your MongoDB URL after the command. Example: `/chkmongo your_mongodb_url`")
         return
 
     mongo_url = message.command[1]
