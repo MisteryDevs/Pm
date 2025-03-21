@@ -25,10 +25,10 @@ async def toggle_reaction(client: Client, message: Message):
         action = message.command[1].lower()
         if action == "on":
             reaction_enabled[chat_id] = True
-            return await message.reply("✅ ʀᴇᴀᴄᴛɪᴏɴ sʏsᴛᴇᴍ ᴇɴᴀʙʟᴇᴅ 👿 ")
+            return await message.reply("✅ ʀᴇᴀᴄᴛɪᴏɴ sʏsᴛᴇᴍ ᴇɴᴀʙʟᴇᴅ ")
         elif action == "off":
             reaction_enabled[chat_id] = False
-            return await message.reply("❌ ʀᴇᴀᴄᴛɪᴏɴ sʏsᴛᴇᴍ ᴅɪsᴀʙʟᴇᴅ 🥺")
+            return await message.reply("❌ ʀᴇᴀᴄᴛɪᴏɴ sʏsᴛᴇᴍ ᴅɪsᴀʙʟᴇᴅ ")
     
     # Agar koi argument na ho to usage dikhaye
     await message.reply("⚙️ ᴜsᴀɢᴇ :`/reaction on` ya `/reaction off`")
