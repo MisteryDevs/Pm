@@ -5,64 +5,72 @@ from config import OWNER_ID
 import aiohttp
 import re
 
-# ✅ VC Started
+# ✅ VC Started (Auto-detect)
 @app.on_message(filters.video_chat_started)
 async def vc_started(_, msg):
     await msg.reply("😍 ᴠᴏɪᴄᴇ ᴄʜᴀᴛ sᴛᴀʀᴛᴇᴅ 🥳")
 
-# ❌ VC Ended
+# ❌ VC Ended (Auto-detect)
 @app.on_message(filters.video_chat_ended)
 async def vc_ended(_, msg):
     await msg.reply("😕 ᴠᴏɪᴄᴇ ᴄʜᴀᴛ ᴇɴᴅᴇᴅ 💔")
 
-# 🎤 VC Join Message
-@app.on_message(filters.video_chat_participant_added)
-async def vc_join(client, message: Message):
-    for user in message.video_chat_participants_added:
-        try:
-            await message.reply(f"✅ {user.mention} ᴊᴏɪɴᴇᴅ ᴛʜᴇ ᴠᴏɪᴄᴇ ᴄʜᴀᴛ! 🎤")
-        except:
-            pass
-
-# 🚪 VC Leave Message
-@app.on_message(filters.video_chat_participant_removed)
-async def vc_leave(client, message: Message):
-    for user in message.video_chat_participants_removed:
-        try:
-            await message.reply(f"❌ {user.mention} ʟᴇғᴛ ᴛʜᴇ ᴠᴏɪᴄᴇ ᴄʜᴀᴛ! 😔")
-        except:
-            pass
-
 # 🎟 Invite Members to VC
 @app.on_message(filters.video_chat_members_invited)
 async def vc_invite(client, message: Message):
-    text = f"🔊 {message.from_user.mention} ɪɴᴠɪᴛᴇᴅ: "
+    text = f"{message.from_user.mention} 👈ɪɴᴠɪᴛᴇᴅ👉 "
     for user in message.video_chat_members_invited.users:
         try:
             text += f"[{user.first_name}](tg://user?id={user.id}) "
         except Exception:
             pass
     try:
-        await message.reply(f"{text} 🎧")
+        await message.reply(f"{text} 🤭🤭")
     except:
         pass
 
+# 🎤 Start Voice Chat Manually
+@app.on_message(filters.command(["stvc", "startvc", "vcstart"]) & filters.user(OWNER_ID))
+async def start_vc(client, message):
+    chat_id = message.chat.id
+    try:
+        await client.invoke(
+            "StartScheduledVoiceChat",
+            peer=chat_id
+        )
+        await message.reply("🎙️ ᴠᴏɪᴄᴇ ᴄʜᴀᴛ ʜᴀs ʙᴇᴇɴ sᴛᴀʀᴛᴇᴅ ✅")
+    except Exception as e:
+        await message.reply(f"⚠️ ғᴀɪʟᴇᴅ ᴛᴏ sᴛᴀʀᴛ ᴠᴏɪᴄᴇ ᴄʜᴀᴛ:\n`{e}`")
+
+# 🚪 End Voice Chat Manually
+@app.on_message(filters.command(["end", "endvc", "vcend"]) & filters.user(OWNER_ID))
+async def end_vc(client, message):
+    chat_id = message.chat.id
+    try:
+        await client.invoke(
+            "DiscardGroupCall",
+            peer=chat_id
+        )
+        await message.reply("❌ ᴠᴏɪᴄᴇ ᴄʜᴀᴛ ʜᴀs ʙᴇᴇɴ ᴇɴᴅᴇᴅ 💔")
+    except Exception as e:
+        await message.reply(f"⚠️ ғᴀɪʟᴇᴅ ᴛᴏ ᴇɴᴅ ᴠᴏɪᴄᴇ ᴄʜᴀᴛ:\n`{e}`")
+
 # 🧮 Math Command
 @app.on_message(filters.command("math", prefixes="/"))
-async def calculate_math(client, message):
-    try:
-        expression = message.text.split("/math ", 1)[1]
+def calculate_math(client, message):   
+    expression = message.text.split("/math ", 1)[1]
+    try:        
         result = eval(expression)
-        response = f"📊 ʀᴇsᴜʟᴛ: `{result}`"
+        response = f"📊 ᴛʜᴇ ʀᴇsᴜʟᴛ ɪs: `{result}`"
     except:
         response = "⚠️ ɪɴᴠᴀʟɪᴅ ᴇxᴘʀᴇssɪᴏɴ!"
-    await message.reply(response)
+    message.reply(response)
 
 # 📤 Bot Leave Group Command
 @app.on_message(filters.command("leavegroup") & filters.user(OWNER_ID))
 async def bot_leave(client, message):
     chat_id = message.chat.id
-    text = "🤖 ʟᴇᴀᴠɪɴɢ ᴛʜɪs ᴄʜᴀᴛ... 🚀"
+    text = "🤖 sᴜᴄᴄᴇssғᴜʟʟʏ ʟᴇғᴛ ᴛʜɪs ᴄʜᴀᴛ! 🚀"
     await message.reply_text(text)
     await client.leave_chat(chat_id=chat_id, delete=True)
 
@@ -88,7 +96,6 @@ async def search(event):
                 if "?" in link:
                     link = link.split("?")[0]
                 if link in result:
-                    # remove duplicates
                     continue
                 result += f"{title}\n{link}\n\n"
             await msg.edit(result, link_preview=False)
