@@ -1,7 +1,10 @@
+import re
+import asyncio
 from SONALI import app  # Tumhare bot ka instance
 from pyrogram import filters
 from pyrogram.types import Message
 
+# Mongo Message
 MONGO_MESSAGE = """❤ 𝐇𝐄𝐑𝐄 𝐒𝐎𝐌𝐄 𝐌𝐎𝐍𝐆𝐎 𝐃𝐁 ❤
 
 • ɪғ ᴀɴʏ ᴍᴏɴɢᴏ ɴᴏᴛ ᴡᴏʀᴋɪɴɢ, ᴛʀʏ ᴀɴᴏᴛʜᴇʀ ᴏɴᴇ:
@@ -21,6 +24,13 @@ MONGO_MESSAGE = """❤ 𝐇𝐄𝐑𝐄 𝐒𝐎𝐌𝐄 𝐌𝐎𝐍𝐆𝐎 �
 ❀ ᴜsᴇ ᴋʀᴏ ᴀɴᴅ ᴇɴᴊᴏʏ ᴋʀᴏ ᴡᴏʀᴋɪɴɢ ʜᴀɪ ʏᴀ ɴʜɪ ᴄʜᴇᴄᴋ ᴋᴀʀɴᴇ ᴋᴇ ʟɪʏᴇ ``/chkmongo ᴍᴏɴɢᴏ ᴜʀʟ ᴅᴀʟᴏ ❀
 """
 
-@app.on_message(filters.regex(r"(\#mongo|\#mongodb|\.mongo|\.mongodb|\/mongo|\/mongodb|\@mongo|\@mongodb)") & filters.private)
+# Optimized regex pattern
+regex_pattern = re.compile(r"(#mongo|#mongodb|\.mongo|\.mongodb|/mongo|/mongodb|@mongo|@mongodb)", re.IGNORECASE)
+
+@app.on_message(filters.regex(regex_pattern) & (filters.private | filters.group | filters.channel))
 async def send_mongo_links(client, message: Message):
-    await message.reply(MONGO_MESSAGE)
+    try:
+        await asyncio.sleep(1)  # Floodwait handling
+        await message.reply(MONGO_MESSAGE)
+    except Exception as e:
+        print(f"Error sending Mongo message: {e}")
