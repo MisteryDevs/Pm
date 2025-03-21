@@ -3,41 +3,44 @@ from pyrogram.types import Message
 from pyrogram.enums import ChatMemberStatus
 from SONALI import app
 
-# Reaction system ka status (default: enabled)
-reaction_enabled = True
+# Default: Reaction system OFF
+reaction_enabled = {}
 
 # Admins ke liye command
-@app.on_message(filters.command(["reaction"]) & filters.group)
+@app.on_message(filters.command(["reaction"]) & filters.group | filters.channel | filters.private)
 async def toggle_reaction(client: Client, message: Message):
     global reaction_enabled
-
-    # Check if user is admin
     chat_id = message.chat.id
-    user_id = message.from_user.id
-    member = await client.get_chat_member(chat_id, user_id)
-    
-    if member.status not in [ChatMemberStatus.OWNER, ChatMemberStatus.ADMINISTRATOR]:
-        return await message.reply("❌ **Sirf Admin hi is command ka use kar sakte hain!**")
 
+    # Check if user is admin (Group & Channel)
+    if message.chat.type in ["supergroup", "group", "channel"]:
+        user_id = message.from_user.id if message.from_user else None
+        member = await client.get_chat_member(chat_id, user_id)
+        
+        if member.status not in [ChatMemberStatus.OWNER, ChatMemberStatus.ADMINISTRATOR]:
+            return await message.reply("❌ sɪʀғ ᴀᴅᴍɪɴ ʜɪ ɪs ᴄᴏᴍᴍɴᴅ ᴋᴀ ᴜsᴇ ᴋᴀʀ sᴀᴋᴛᴇ ʜᴀɪɴ ʙʙʏ !")
+    
     # Toggle reaction system
     if len(message.command) > 1:
         action = message.command[1].lower()
         if action == "on":
-            reaction_enabled = True
-            return await message.reply("✅ **Reaction System Enabled!**")
+            reaction_enabled[chat_id] = True
+            return await message.reply("✅ ʀᴇᴀᴄᴛɪᴏɴ sʏsᴛᴇᴍ ᴇɴᴀʙʟᴇᴅ 👿 ")
         elif action == "off":
-            reaction_enabled = False
-            return await message.reply("❌ **Reaction System Disabled!**")
+            reaction_enabled[chat_id] = False
+            return await message.reply("❌ ʀᴇᴀᴄᴛɪᴏɴ sʏsᴛᴇᴍ ᴅɪsᴀʙʟᴇᴅ 🥺")
     
     # Agar koi argument na ho to usage dikhaye
-    await message.reply("⚙️ **Usage:** `/reaction on` ya `/reaction off`")
+    await message.reply("⚙️ ᴜsᴀɢᴇ :`/reaction on` ya `/reaction off`")
 
 
-# Auto-reactions (Har jagah kaam karega)
-@app.on_message(filters.incoming)
+# Auto-reactions (Default: OFF)
+@app.on_message(filters.incoming & (filters.group | filters.channel | filters.private))
 async def react_to_messages(client: Client, message: Message):
     global reaction_enabled
-    if not reaction_enabled:
+    chat_id = message.chat.id
+    
+    if not reaction_enabled.get(chat_id, False):
         return  # Agar disabled hai to react mat karo
     
     try:
