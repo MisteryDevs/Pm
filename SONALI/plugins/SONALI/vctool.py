@@ -2,56 +2,71 @@ from pyrogram import Client, filters
 from pyrogram.types import Message
 from SONALI import app
 from config import OWNER_ID
-# vc on
+import aiohttp
+import re
+
+# ✅ VC Started
 @app.on_message(filters.video_chat_started)
-async def brah(_, msg):
-       await msg.reply("😍ᴠᴏɪᴄᴇ ᴄʜᴀᴛ sᴛᴀʀᴛᴇᴅ🥳")
-# vc off
+async def vc_started(_, msg):
+    await msg.reply("😍 ᴠᴏɪᴄᴇ ᴄʜᴀᴛ sᴛᴀʀᴛᴇᴅ 🥳")
+
+# ❌ VC Ended
 @app.on_message(filters.video_chat_ended)
-async def brah2(_, msg):
-       await msg.reply("😕ᴠᴏɪᴄᴇ ᴄʜᴀᴛ ᴇɴᴅᴇᴅ💔")
+async def vc_ended(_, msg):
+    await msg.reply("😕 ᴠᴏɪᴄᴇ ᴄʜᴀᴛ ᴇɴᴅᴇᴅ 💔")
 
-# invite members on vc
+# 🎤 VC Join Message
+@app.on_message(filters.video_chat_participant_added)
+async def vc_join(client, message: Message):
+    for user in message.video_chat_participants_added:
+        try:
+            await message.reply(f"✅ {user.mention} ᴊᴏɪɴᴇᴅ ᴛʜᴇ ᴠᴏɪᴄᴇ ᴄʜᴀᴛ! 🎤")
+        except:
+            pass
+
+# 🚪 VC Leave Message
+@app.on_message(filters.video_chat_participant_removed)
+async def vc_leave(client, message: Message):
+    for user in message.video_chat_participants_removed:
+        try:
+            await message.reply(f"❌ {user.mention} ʟᴇғᴛ ᴛʜᴇ ᴠᴏɪᴄᴇ ᴄʜᴀᴛ! 😔")
+        except:
+            pass
+
+# 🎟 Invite Members to VC
 @app.on_message(filters.video_chat_members_invited)
-async def brah3(app :app, message:Message):
-           text = f"{message.from_user.mention} 👈ɪɴᴠɪᴛᴇᴅᴛ ᴛᴏ👉 "
-           x = 0
-           for user in message.video_chat_members_invited.users:
-             try:
-               text += f"[{user.first_name}](tg://user?id={user.id}) "
-               x += 1
-             except Exception:
-               pass
-           try:
-             await message.reply(f"{text} 🤭🤭")
-           except:
-             pass
-
-
-####
-
-@app.on_message(filters.command("math", prefixes="/"))
-def calculate_math(client, message):   
-    expression = message.text.split("/math ", 1)[1]
-    try:        
-        result = eval(expression)
-        response = f"ᴛʜᴇ ʀᴇsᴜʟᴛ ɪs : {result}"
+async def vc_invite(client, message: Message):
+    text = f"🔊 {message.from_user.mention} ɪɴᴠɪᴛᴇᴅ: "
+    for user in message.video_chat_members_invited.users:
+        try:
+            text += f"[{user.first_name}](tg://user?id={user.id}) "
+        except Exception:
+            pass
+    try:
+        await message.reply(f"{text} 🎧")
     except:
-        response = "ɪɴᴠᴀʟɪᴅ ᴇxᴘʀᴇssɪᴏɴ"
-    message.reply(response)
+        pass
 
-###
-@app.on_message(filters.command("leavegroup")& filters.user(OWNER_ID))
-async def bot_leave(_, message):
+# 🧮 Math Command
+@app.on_message(filters.command("math", prefixes="/"))
+async def calculate_math(client, message):
+    try:
+        expression = message.text.split("/math ", 1)[1]
+        result = eval(expression)
+        response = f"📊 ʀᴇsᴜʟᴛ: `{result}`"
+    except:
+        response = "⚠️ ɪɴᴠᴀʟɪᴅ ᴇxᴘʀᴇssɪᴏɴ!"
+    await message.reply(response)
+
+# 📤 Bot Leave Group Command
+@app.on_message(filters.command("leavegroup") & filters.user(OWNER_ID))
+async def bot_leave(client, message):
     chat_id = message.chat.id
-    text = f"sᴜᴄᴄᴇssғᴜʟʟʏ   ʟᴇғᴛ  !!."
+    text = "🤖 ʟᴇᴀᴠɪɴɢ ᴛʜɪs ᴄʜᴀᴛ... 🚀"
     await message.reply_text(text)
-    await app.leave_chat(chat_id=chat_id, delete=True)
+    await client.leave_chat(chat_id=chat_id, delete=True)
 
-
-####
-
-
+# 🔍 Google Search Command
 @app.on_message(filters.command(["spg"], ["/", "!", "."]))
 async def search(event):
     msg = await event.respond("Searching...")
@@ -76,6 +91,5 @@ async def search(event):
                     # remove duplicates
                     continue
                 result += f"{title}\n{link}\n\n"
-            prev_and_next_btns = [Button.inline("▶️Next▶️", data=f"next {start+10} {event.text.split()[1]}")]
-            await msg.edit(result, link_preview=False, buttons=prev_and_next_btns)
+            await msg.edit(result, link_preview=False)
             await session.close()
