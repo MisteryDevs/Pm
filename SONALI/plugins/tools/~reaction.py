@@ -7,31 +7,35 @@ from SONALI import app
 reaction_enabled = {}
 
 # Admins ke liye command
-@app.on_message(filters.command(["reaction"]) & filters.group | filters.channel | filters.private)
+@app.on_message(filters.command(["reaction"]) & (filters.group | filters.channel | filters.private))
 async def toggle_reaction(client: Client, message: Message):
     global reaction_enabled
     chat_id = message.chat.id
 
+    # Agar message.from_user None ho, to ignore karein (bot messages ke case me)
+    if not message.from_user:
+        return
+    
     # Check if user is admin (Group & Channel)
     if message.chat.type in ["supergroup", "group", "channel"]:
-        user_id = message.from_user.id if message.from_user else None
+        user_id = message.from_user.id
         member = await client.get_chat_member(chat_id, user_id)
         
         if member.status not in [ChatMemberStatus.OWNER, ChatMemberStatus.ADMINISTRATOR]:
-            return await message.reply("❌ sɪʀғ ᴀᴅᴍɪɴ ʜɪ ɪs ᴄᴏᴍᴍɴᴅ ᴋᴀ ᴜsᴇ ᴋᴀʀ sᴀᴋᴛᴇ ʜᴀɪɴ ʙʙʏ !")
-    
+            return await message.reply("❌ sɪʀғ ᴀᴅᴍɪɴ ʜɪ ɪs ᴄᴏᴍᴍɴᴅ ᴋᴀ ᴜsᴇ ᴋᴀʀsᴀᴋᴛᴇ ʜᴀɪɴ !")
+
     # Toggle reaction system
-    if len(message.command) > 1:
+    if message.command and len(message.command) > 1:
         action = message.command[1].lower()
         if action == "on":
             reaction_enabled[chat_id] = True
-            return await message.reply("✅ ʀᴇᴀᴄᴛɪᴏɴ sʏsᴛᴇᴍ ᴇɴᴀʙʟᴇᴅ ")
+            return await message.reply("✅ ʀᴇᴀᴄᴛɪᴏɴ sʏsᴛᴇᴍ ᴇɴᴀʙʟᴇᴅ")
         elif action == "off":
             reaction_enabled[chat_id] = False
-            return await message.reply("❌ ʀᴇᴀᴄᴛɪᴏɴ sʏsᴛᴇᴍ ᴅɪsᴀʙʟᴇᴅ ")
+            return await message.reply("❌ ʀᴇᴀᴄᴛɪᴏɴ sʏsᴛᴇᴍ ᴅɪsᴀʙʟᴇᴅ")
     
     # Agar koi argument na ho to usage dikhaye
-    await message.reply("⚙️ ᴜsᴀɢᴇ :`/reaction on` ya `/reaction off`")
+    await message.reply("⚙️ ᴜsᴀɢᴇ : `/reaction on` ya `/reaction off`")
 
 
 # Auto-reactions (Default: OFF)
