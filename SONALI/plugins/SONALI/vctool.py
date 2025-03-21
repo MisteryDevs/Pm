@@ -2,79 +2,56 @@ from pyrogram import Client, filters
 from pyrogram.types import Message
 from SONALI import app
 from config import OWNER_ID
-import aiohttp
-import re
-
-# ✅ VC Started (Auto-detect)
+# vc on
 @app.on_message(filters.video_chat_started)
-async def vc_started(_, msg):
-    await msg.reply("😍 ᴠᴏɪᴄᴇ ᴄʜᴀᴛ sᴛᴀʀᴛᴇᴅ 🥳")
-
-# ❌ VC Ended (Auto-detect)
+async def brah(_, msg):
+       await msg.reply("😍ᴠᴏɪᴄᴇ ᴄʜᴀᴛ sᴛᴀʀᴛᴇᴅ🥳")
+# vc off
 @app.on_message(filters.video_chat_ended)
-async def vc_ended(_, msg):
-    await msg.reply("😕 ᴠᴏɪᴄᴇ ᴄʜᴀᴛ ᴇɴᴅᴇᴅ 💔")
+async def brah2(_, msg):
+       await msg.reply("😕ᴠᴏɪᴄᴇ ᴄʜᴀᴛ ᴇɴᴅᴇᴅ💔")
 
-# 🎟 Invite Members to VC
+# invite members on vc
 @app.on_message(filters.video_chat_members_invited)
-async def vc_invite(client, message: Message):
-    text = f"{message.from_user.mention} 👈ɪɴᴠɪᴛᴇᴅ👉 "
-    for user in message.video_chat_members_invited.users:
-        try:
-            text += f"[{user.first_name}](tg://user?id={user.id}) "
-        except Exception:
-            pass
-    try:
-        await message.reply(f"{text} 🤭🤭")
-    except:
-        pass
+async def brah3(app :app, message:Message):
+           text = f"{message.from_user.mention} 👈ɪɴᴠɪᴛᴇᴅᴛ ᴛᴏ👉 "
+           x = 0
+           for user in message.video_chat_members_invited.users:
+             try:
+               text += f"[{user.first_name}](tg://user?id={user.id}) "
+               x += 1
+             except Exception:
+               pass
+           try:
+             await message.reply(f"{text} 🤭🤭")
+           except:
+             pass
 
-# 🎤 Start Voice Chat Manually
-@app.on_message(filters.command(["stvc", "startvc", "vcstart"]) & filters.user(OWNER_ID))
-async def start_vc(client, message):
-    chat_id = message.chat.id
-    try:
-        await client.invoke(
-            "StartScheduledVoiceChat",
-            peer=chat_id
-        )
-        await message.reply("🎙️ ᴠᴏɪᴄᴇ ᴄʜᴀᴛ ʜᴀs ʙᴇᴇɴ sᴛᴀʀᴛᴇᴅ ✅")
-    except Exception as e:
-        await message.reply(f"⚠️ ғᴀɪʟᴇᴅ ᴛᴏ sᴛᴀʀᴛ ᴠᴏɪᴄᴇ ᴄʜᴀᴛ:\n`{e}`")
 
-# 🚪 End Voice Chat Manually
-@app.on_message(filters.command(["end", "endvc", "vcend"]) & filters.user(OWNER_ID))
-async def end_vc(client, message):
-    chat_id = message.chat.id
-    try:
-        await client.invoke(
-            "DiscardGroupCall",
-            peer=chat_id
-        )
-        await message.reply("❌ ᴠᴏɪᴄᴇ ᴄʜᴀᴛ ʜᴀs ʙᴇᴇɴ ᴇɴᴅᴇᴅ 💔")
-    except Exception as e:
-        await message.reply(f"⚠️ ғᴀɪʟᴇᴅ ᴛᴏ ᴇɴᴅ ᴠᴏɪᴄᴇ ᴄʜᴀᴛ:\n`{e}`")
+####
 
-# 🧮 Math Command
 @app.on_message(filters.command("math", prefixes="/"))
 def calculate_math(client, message):   
     expression = message.text.split("/math ", 1)[1]
     try:        
         result = eval(expression)
-        response = f"📊 ᴛʜᴇ ʀᴇsᴜʟᴛ ɪs: `{result}`"
+        response = f"ᴛʜᴇ ʀᴇsᴜʟᴛ ɪs : {result}"
     except:
-        response = "⚠️ ɪɴᴠᴀʟɪᴅ ᴇxᴘʀᴇssɪᴏɴ!"
+        response = "ɪɴᴠᴀʟɪᴅ ᴇxᴘʀᴇssɪᴏɴ"
     message.reply(response)
 
-# 📤 Bot Leave Group Command
-@app.on_message(filters.command("leavegroup") & filters.user(OWNER_ID))
-async def bot_leave(client, message):
+###
+@app.on_message(filters.command("leavegroup")& filters.user(OWNER_ID))
+async def bot_leave(_, message):
     chat_id = message.chat.id
-    text = "🤖 sᴜᴄᴄᴇssғᴜʟʟʏ ʟᴇғᴛ ᴛʜɪs ᴄʜᴀᴛ! 🚀"
+    text = f"sᴜᴄᴄᴇssғᴜʟʟʏ   ʟᴇғᴛ  !!."
     await message.reply_text(text)
-    await client.leave_chat(chat_id=chat_id, delete=True)
+    await app.leave_chat(chat_id=chat_id, delete=True)
 
-# 🔍 Google Search Command
+
+####
+
+
 @app.on_message(filters.command(["spg"], ["/", "!", "."]))
 async def search(event):
     msg = await event.respond("Searching...")
@@ -96,7 +73,9 @@ async def search(event):
                 if "?" in link:
                     link = link.split("?")[0]
                 if link in result:
+                    # remove duplicates
                     continue
                 result += f"{title}\n{link}\n\n"
-            await msg.edit(result, link_preview=False)
+            prev_and_next_btns = [Button.inline("▶️Next▶️", data=f"next {start+10} {event.text.split()[1]}")]
+            await msg.edit(result, link_preview=False, buttons=prev_and_next_btns)
             await session.close()
