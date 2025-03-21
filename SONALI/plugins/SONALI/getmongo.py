@@ -26,22 +26,21 @@ MONGO_MESSAGE = """❤ 𝐇𝐄𝐑𝐄 𝐒𝐎𝐌𝐄 𝐌𝐎𝐍𝐆𝐎 �
 # Regex for MongoDB URLs
 mongo_url_pattern = re.compile(r"mongodb\+srv://[^\s]+")
 
-# ✅ Sirf exact `/mongo` aur `/mongodb` command allow karega
-@app.on_message(filters.command(["mongo", "mongodb"]) & filters.text & (filters.private | filters.group | filters.channel))
+# ✅ `/mongo` aur `/mongodb` sirf tab work karega jab exact likha ho
+@app.on_message(filters.command(["mongo", "mongodb"]) & filters.private)
 async def send_mongo_links(client, message: Message):
     try:
-        # ✅ Check karega ki sirf `/mongo` likha gaya hai ya nahi
-        if message.text.strip().lower() in ["/mongo", "/mongodb"]:
+        if message.text.strip().lower() in ["/mongo", "/mongodb"]:  # Exact match check
             await asyncio.sleep(1)  # Floodwait handling
             await message.reply(MONGO_MESSAGE)
     except Exception as e:
         print(f"Error sending Mongo message: {e}")
 
 # ✅ Agar kisi message me MongoDB URL ho aur koi uspe tag kare ya reply kare to auto-copy ho
-@app.on_message(filters.text & (filters.private | filters.group | filters.channel))
+@app.on_message(filters.text & ~filters.command & (filters.private | filters.group | filters.channel))
 async def auto_copy_mongo_url(client, message: Message):
     try:
-        # Check agar reply wale message me MongoDB URL hai
+        # Agar reply wale message me MongoDB URL hai
         if message.reply_to_message and message.reply_to_message.text:
             mongo_links = mongo_url_pattern.findall(message.reply_to_message.text)
             if mongo_links:
@@ -50,7 +49,7 @@ async def auto_copy_mongo_url(client, message: Message):
                 await message.reply(f"✅ **Copied MongoDB URL:**\n{copied_links}")
                 return
 
-        # Check agar message ke andar koi MongoDB URL mention kiya gaya hai
+        # Agar khudke message me MongoDB URL hai
         mongo_links = mongo_url_pattern.findall(message.text)
         if mongo_links:
             copied_links = "\n".join(f'"{link}"' for link in mongo_links)  # 🔹 "MongoDB URL" format me
