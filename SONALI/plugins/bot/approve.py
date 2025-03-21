@@ -1,7 +1,7 @@
 from SONALI import app
 from os import environ
 from pyrogram import filters
-from pyrogram.types import ChatJoinRequest, InlineKeyboardButton, InlineKeyboardMarkup
+from pyrogram.types import ChatJoinRequest, InlineKeyboardButton, InlineKeyboardMarkup, Message
 
 # Define Inline Button (Only Add Me)
 BUTTONS = InlineKeyboardMarkup(
@@ -46,15 +46,15 @@ async def autoapprove(client, message: ChatJoinRequest):
         )
 
 # Command to Enable Auto-Approval
-@app.on_message(filters.command("approveon") & filters.group)
-async def enable_autoapprove(client, message):
+@app.on_message(filters.command("approve on") & (filters.group | filters.channel))
+async def enable_autoapprove(client, message: Message):
     global APPROVAL_STATE
     APPROVAL_STATE = True
-    await message.reply_text("✅ Auto-approval has been ENABLED!\nNew join requests will be approved automatically.")
+    await message.reply_text("✅ ᴀᴜᴛᴏ-ᴀᴘᴘʀᴏᴠᴇʟ ᴇɴᴀʙʟᴇᴅ!\nNew ᴊᴏɪɴ ʀᴇǫᴜᴇsᴛs ᴡɪʟʟ ʙᴇ ᴀᴘᴘʀᴏᴠᴇᴅ ᴀᴜᴛᴏᴍᴀᴛɪᴄᴀʟʟʏ.")
 
 # Command to Disable Auto-Approval
-@app.on_message(filters.command("approveoff") & filters.group)
-async def disable_autoapprove(client, message):
+@app.on_message(filters.command("approve off") & (filters.group | filters.channel))
+async def disable_autoapprove(client, message: Message):
     global APPROVAL_STATE
     APPROVAL_STATE = False
-    await message.reply_text("❌ Auto-approval has been DISABLED!\nAdmins must manually approve new join requests.")
+    await message.reply_text("❌ Aᴜᴛᴏ-ᴀᴘᴘʀᴏᴠᴇ ᴅɪsᴀʙʟᴇᴅ !\nAᴅᴍɪɴs ᴍᴜsᴛ ᴍᴀɴᴜᴀʟʟʏ ᴀᴘᴘʀᴏᴠᴇ ɴᴇᴡ ᴊᴏɪɴ ʀᴇǫᴜᴇsᴛs.")
