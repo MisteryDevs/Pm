@@ -54,7 +54,7 @@ async def start_comm(client, message: Message, _):
         # 🎭 Sticker Send & Delete (3 sec)
         sticker = await client.send_sticker(
             chat_id=chat_id,
-            sticker="CAACAgUAAxkBAAEQI1RlTLnRAy4h9lOS6jgS5FYsQoruOAAC1gMAAg6ryVcldUr_lhPexzME"
+            sticker="CAACAgUAAxkBAAIM8Gfe5UtCwBaRPvRsEYtymVXgTyK4AAIUEAAC5XDJVihzQRaTFdEAAR4E"
         )
         await asyncio.sleep(3)
         await sticker.delete()
