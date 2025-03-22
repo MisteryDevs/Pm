@@ -2,21 +2,23 @@ from SONALI import app
 from pyrogram import filters
 from pyrogram.enums import ParseMode
 
-
+# /me command - Get User ID and Chat ID
 @app.on_message(filters.command("me"))
-def ids(_, message):
+def ids(client, message):
     reply = message.reply_to_message
     if reply:
         message.reply_text(
-            f"🔸ʏᴏᴜʀ ɪᴅ: {message.from_user.id}\n▪️{reply.from_user.first_name}'s ɪᴅ: {reply.from_user.id}\n▫️ᴄʜᴀᴛ ɪᴅ: {message.chat.id}"
+            f"🔸ʏᴏᴜʀ ɪᴅ: `{message.from_user.id}`\n"
+            f"▪️ {reply.from_user.first_name}'s ɪᴅ: `{reply.from_user.id}`\n"
+            f"▫️ᴄʜᴀᴛ ɪᴅ: `{message.chat.id}`"
         )
     else:
-        message.reply(f"🔸ʏᴏᴜʀ ɪᴅ: {message.from_user.id}\n▫️ᴄʜᴀᴛ ɪᴅ: {message.chat.id}")
+        message.reply_text(
+            f"🔸ʏᴏᴜʀ ɪᴅ: `{message.from_user.id}`\n"
+            f"▫️ᴄʜᴀᴛ ɪᴅ: `{message.chat.id}`"
+        )
 
-
-####
-
-
+# /id command - Get Message, User, and Chat IDs
 @app.on_message(filters.command("id"))
 async def getid(client, message):
     chat = message.chat
@@ -26,9 +28,6 @@ async def getid(client, message):
 
     text = f"🔸[ᴍᴇssᴀɢᴇ ɪᴅ:]({message.link}) `{message_id}`\n"
     text += f"▪️[ʏᴏᴜʀ ɪᴅ:](tg://user?id={your_id}) `{your_id}`\n"
-
-    if not message.command:
-        message.command = message.text.split()
 
     if not message.command:
         message.command = message.text.split()
@@ -54,14 +53,12 @@ async def getid(client, message):
 
     if reply and reply.forward_from_chat:
         text += f"🔸ᴛʜᴇ ғᴏʀᴡᴀʀᴅᴇᴅ ᴄʜᴀɴɴᴇʟ, {reply.forward_from_chat.title}, ▫️ʜᴀs ᴀɴ ɪᴅ ᴏғ `{reply.forward_from_chat.id}`\n\n"
-        print(reply.forward_from_chat)
 
     if reply and reply.sender_chat:
         text += f"🔸ɪᴅ ᴏғ ᴛʜᴇ ʀᴇᴘʟɪᴇᴅ ᴄʜᴀᴛ/ᴄʜᴀɴɴᴇʟ, ɪs `{reply.sender_chat.id}`"
-        print(reply.sender_chat)
 
     await message.reply_text(
         text,
         disable_web_page_preview=True,
         parse_mode=ParseMode.DEFAULT,
-    )
+            )
