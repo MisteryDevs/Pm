@@ -33,16 +33,16 @@ async def start_comm(client, message: Message, _):
 
     # 🎭 Typing Effect - Ding Dong
     try:
-        vip = await message.reply_text("**ᴅιиg ᴅσиg ꨄ︎❣️.....**")
+        vip = await message.reply_text("ᴅιиg ᴅσиg ꨄ︎❣️.....")
         for i in range(5):
-            await vip.edit_text(f"**ᴅιиg ᴅσиg ꨄ︎{'.' * (5-i)}❣️{'.' * i}**")
+            await vip.edit_text(f"ᴅιиg ᴅσиg ꨄ︎{'.'  (5-i)}❣️{'.'  i}")
             await asyncio.sleep(0.2)
         await vip.delete()
 
         # 🎭 Typing Effect - "Starting..."
-        vips = await message.reply_text("**⚡ѕ**")
-        steps = ["**⚡ѕт**", "**⚡ѕтα**", "**⚡ѕтαя**", "**⚡ѕтαят**", "**⚡ѕтαятι**", 
-                 "**⚡ѕтαятιи**", "**⚡ѕтαятιиg**", "**⚡ѕтαятιиg.**", "**⚡ѕтαятιиg....**"]
+        vips = await message.reply_text("ѕ")
+        steps = ["ѕт", "ѕтα", "ѕтαя", "ѕтαят", "ѕтαятι", 
+                 "ѕтαятιи", "ѕтαятιиg", "ѕтαятιиg.", "ѕтαятιиg...."]
         for step in steps:
             await asyncio.sleep(0.1)
             await vips.edit_text(step)
@@ -54,7 +54,7 @@ async def start_comm(client, message: Message, _):
             chat_id=chat_id,
             sticker="CAACAgUAAx0CcSyO9gACl7dkQoL0p1vXqcYtCuCHmSyh4Hi1UgACEwgAAonAEVYwaJ0Jkk8L0B4E"
         )
-        await asyncio.sleep(1)
+        await asyncio.sleep(3)
         await sticker.delete()
 
     except Exception as e:
