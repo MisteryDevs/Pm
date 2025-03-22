@@ -1,14 +1,12 @@
 import time
-import asyncio  # asyncio ko import karna na bhulein
+import asyncio
 from pyrogram import filters
-from pyrogram.errors import ChannelInvalid
-from pyrogram.enums import ChatType, ChatMembersFilter
+from pyrogram.enums import ChatType
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 from youtubesearchpython.__future__ import VideosSearch
 import config
 from SONALI import app
 from SONALI.misc import _boot_
-from SONALI.plugins.sudo.sudoers import sudoers_list
 from SONALI.utils.database import (
     add_served_chat,
     add_served_user,
@@ -16,13 +14,13 @@ from SONALI.utils.database import (
     get_lang,
     is_banned_user,
     is_on_off,
-    connect_to_chat,
 )
 from SONALI.utils.decorators.language import LanguageStart
 from SONALI.utils.formatters import get_readable_time
 from SONALI.utils.inline import private_panel, start_panel
 from config import BANNED_USERS
 from strings import get_string
+
 
 @app.on_message(filters.command(["start"]) & filters.private & ~BANNED_USERS)
 @LanguageStart
@@ -35,39 +33,19 @@ async def start_comm(client, message: Message, _):
 
     # 🎭 Typing Effect - Ding Dong
     try:
-        vip = await message.reply_text(f"**ᴅιиg ᴅσиg ꨄ︎❣️.....**")
-        await vip.edit_text(f"**ᴅιиg ᴅσиg ꨄ︎.❣️....**")
-        await vip.edit_text(f"**ᴅιиg ᴅσиg ꨄ︎..❣️...**")
-        await vip.edit_text(f"**ᴅιиg ᴅσиg ꨄ︎...❣️..**")
-        await vip.edit_text(f"**ᴅιиg ᴅσиg ꨄ︎....❣️.**")
-        await vip.edit_text(f"**ᴅιиg ᴅσиg ꨄ︎.....❣️**")
+        vip = await message.reply_text("**ᴅιиg ᴅσиg ꨄ︎❣️.....**")
+        for i in range(5):
+            await vip.edit_text(f"**ᴅιиg ᴅσиg ꨄ︎{'.' * (5-i)}❣️{'.' * i}**")
+            await asyncio.sleep(0.2)
         await vip.delete()
 
         # 🎭 Typing Effect - "Starting..."
         vips = await message.reply_text("**⚡ѕ**")
-        await asyncio.sleep(0.1)
-        await vips.edit_text("**⚡ѕт**")
-        await asyncio.sleep(0.1)
-        await vips.edit_text("**⚡ѕтα**")
-        await asyncio.sleep(0.1)
-        await vips.edit_text("**⚡ѕтαя**")
-        await asyncio.sleep(0.1)
-        await vips.edit_text("**⚡ѕтαят**")
-        await asyncio.sleep(0.1)
-        await vips.edit_text("**⚡ѕтαятι**")
-        await asyncio.sleep(0.1)
-        await vips.edit_text("**⚡ѕтαятιи**")
-        await asyncio.sleep(0.1)
-        await vips.edit_text("**⚡ѕтαятιиg**")
-        await asyncio.sleep(0.1)
-        await vips.edit_text("**⚡ѕтαятιиg.**")
-        await asyncio.sleep(0.1)
-        await vips.edit_text("**⚡ѕтαятιиg....**")
-        await asyncio.sleep(0.1)
-        await vips.edit_text("**⚡ѕтαятιиg.**")
-        await asyncio.sleep(0.1)
-        await vips.edit_text("**⚡ѕтαятιиg....**")
-        
+        steps = ["**⚡ѕт**", "**⚡ѕтα**", "**⚡ѕтαя**", "**⚡ѕтαят**", "**⚡ѕтαятι**", 
+                 "**⚡ѕтαятιи**", "**⚡ѕтαятιиg**", "**⚡ѕтαятιиg.**", "**⚡ѕтαятιиg....**"]
+        for step in steps:
+            await asyncio.sleep(0.1)
+            await vips.edit_text(step)
         await asyncio.sleep(0.2)
         await vips.delete()
 
@@ -85,7 +63,7 @@ async def start_comm(client, message: Message, _):
     # 🔥 Continue /start Logic After Animation
     if len(message.text.split()) > 1:
         name = message.text.split(None, 1)[1]
-        if name[0:4] == "help":
+        if name.startswith("help"):
             keyboard = InlineKeyboardMarkup(
                 paginate_modules(0, HELPABLE, "help", close=True)
             )
@@ -95,25 +73,10 @@ async def start_comm(client, message: Message, _):
                 reply_markup=keyboard,
             )
 
-    # 🔥 Default Start Message
-    out = private_panel(_)
-    await message.reply_photo(
-        photo=config.START_IMG_URL,
-        caption=_["start_2"].format(message.from_user.mention, app.mention),
-        reply_markup=InlineKeyboardMarkup(out),
-    )
-    
-    if await is_on_off(2):
-        return await app.send_message(
-            chat_id=config.LOGGER_ID,
-            text=f"{message.from_user.mention} ᴊᴜsᴛ sᴛᴀʀᴛᴇᴅ ᴛʜᴇ ʙᴏᴛ.\n\n<b>ᴜsᴇʀ ɪᴅ :</b> <code>{message.from_user.id}</code>\n<b>ᴜsᴇʀɴᴀᴍᴇ :</b> @{message.from_user.username}",
-        )
-            return
-        if name[0:3] == "inf":
+        if name.startswith("inf"):
             m = await message.reply_text("🔎")
-            query = (str(name)).replace("info_", "", 1)
-            query = f"https://www.youtube.com/watch?v={query}"
-            results = VideosSearch(query, limit=1)
+            query = name.replace("info_", "", 1)
+            results = VideosSearch(f"https://www.youtube.com/watch?v={query}", limit=1)
             for result in (await results.next())["result"]:
                 title = result["title"]
                 duration = result["duration"]
@@ -123,16 +86,13 @@ async def start_comm(client, message: Message, _):
                 channel = result["channel"]["name"]
                 link = result["link"]
                 published = result["publishedTime"]
+
             searched_text = _["start_6"].format(
                 title, duration, views, published, channellink, channel, app.mention
             )
             key = InlineKeyboardMarkup(
-                [
-                    [
-                        InlineKeyboardButton(text=_["S_B_8"], url=link),
-                        InlineKeyboardButton(text=_["S_B_9"], url=config.SUPPORT_CHAT),
-                    ],
-                ]
+                [[InlineKeyboardButton(text=_["S_B_8"], url=link),
+                  InlineKeyboardButton(text=_["S_B_9"], url=config.SUPPORT_CHAT)]]
             )
             await m.delete()
             await app.send_photo(
@@ -142,27 +102,28 @@ async def start_comm(client, message: Message, _):
                 reply_markup=key,
             )
             if await is_on_off(2):
-                return await app.send_message(
+                await app.send_message(
                     chat_id=config.LOGGER_ID,
-                    text=f"{message.from_user.mention} ᴊᴜsᴛ sᴛᴀʀᴛᴇᴅ ᴛʜᴇ ʙᴏᴛ ᴛᴏ ᴄʜᴇᴄᴋ <b>ᴛʀᴀᴄᴋ ɪɴғᴏʀᴍᴀᴛɪᴏɴ</b>.\n\n<b>ᴜsᴇʀ ɪᴅ :</b> <code>{message.from_user.id}</code>\n<b>ᴜsᴇʀɴᴀᴍᴇ :</b> @{message.from_user.username}",
+                    text=f"{message.from_user.mention} checked <b>Track Information</b>.\n\n"
+                         f"<b>User ID:</b> <code>{message.from_user.id}</code>\n"
+                         f"<b>Username:</b> @{message.from_user.username}",
                 )
-    else:
-        out = private_panel(_)
-        await message.reply_photo(
-            photo=config.START_IMG_URL,
-            caption=_["start_2"].format(message.from_user.mention, app.mention),
-            reply_markup=InlineKeyboardMarkup(out),
+                return
+
+    out = private_panel(_)
+    await message.reply_photo(
+        photo=config.START_IMG_URL,
+        caption=_["start_2"].format(message.from_user.mention, app.mention),
+        reply_markup=InlineKeyboardMarkup(out),
+    )
+
+    if await is_on_off(2):
+        await app.send_message(
+            chat_id=config.LOGGER_ID,
+            text=f"{message.from_user.mention} started the bot.\n\n"
+                 f"<b>User ID:</b> <code>{message.from_user.id}</code>\n"
+                 f"<b>Username:</b> @{message.from_user.username}",
         )
-        if await is_on_off(2):
-            return await app.send_message(
-                chat_id=config.LOGGER_ID,
-                text=f"{message.from_user.mention} ᴊᴜsᴛ sᴛᴀʀᴛᴇᴅ ᴛʜᴇ ʙᴏᴛ.\n\n<b>ᴜsᴇʀ ɪᴅ :</b> <code>{message.from_user.id}</code>\n<b>ᴜsᴇʀɴᴀᴍᴇ :</b> @{message.from_user.username}",
-            )
-
-# Rest of the code remains the same...
-
-
-
 
 
 @app.on_message(filters.command(["start"]) & filters.group & ~BANNED_USERS)
