@@ -1,11 +1,14 @@
-from SONALI import app, MONGO_DB_URI  # Music Bot's existing MongoDB URL
+from SONALI import app  # Music Bot's existing imports
 from pyrogram import filters
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 import asyncio
 from pymongo import MongoClient
 import time
 
-# MongoDB connection using the same database as the Music Bot
+# Manually define MongoDB URL here
+MONGO_DB_URI = "mongodb+srv://xavib50979:gJXOkCgnY6TWOg6K@cluster0.xrieq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+
+# MongoDB connection using manually set URI
 client = MongoClient(MONGO_DB_URI)
 db = client["MusicBot"]
 edit_settings = db["edit_settings"]
