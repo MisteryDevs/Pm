@@ -32,5 +32,3 @@ pyfiglet
 qrcode
 pymongo[srv]
 gtts
-csv
-os
