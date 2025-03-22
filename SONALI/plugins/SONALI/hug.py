@@ -2,36 +2,31 @@ from SONALI import app
 from pyrogram import filters
 import nekos
 
-
 @app.on_message(filters.command("hug"))
 async def huggg(client, message):
     try:
-        if message.reply_to_message:
-            await message.reply_video(
-                nekos.img("hug"),
-                caption=f"{message.from_user.mention} hugged {message.reply_to_message.from_user.mention}",
-            )
-        else:
-            await message.reply_video(nekos.img("hug"))
-    except Exception as e:
-        await message.reply_text(f"Error: {e}")
+        hug_url = nekos.img("hug")  # Nekos se hug ka image URL milega
+        
+        if not hug_url:  # Agar nekos se valid response nahi mila
+            return await message.reply_text("❌ Hug GIF not found!")
 
+        if message.reply_to_message:
+            caption = f"🤗 {message.from_user.mention} hugged {message.reply_to_message.from_user.mention}!"
+        else:
+            caption = "🤗 Sending virtual hugs!"
+
+        # Agar nekos sirf image return karta hai, to reply_photo() use karein
+        await message.reply_photo(hug_url, caption=caption)
+
+    except Exception as e:
+        await message.reply_text(f"⚠️ Error: {e}")
 
 __MODULE__ = "Hᴜɢ"
 __HELP__ = """
-Tʜɪs ʙᴏᴛ ʀᴇsᴘᴏɴᴅs ᴛᴏ ᴛʜᴇ ғᴏʟʟᴏᴡɪɴɢ ᴄᴏᴍᴍᴀɴᴅs:
+🤗 **Hᴜɢ Cᴏᴍᴍᴀɴᴅ**
+- /hug → Sᴇɴᴅ ᴀ ʜᴜɢɢɪɴɢ ɢɪғ/ɪᴍᴀɢᴇ.
+- Rᴇᴘʟʏ ᴛᴏ ᴀɴᴏᴛʜᴇʀ ᴍᴇssᴀɢᴇ ᴡɪᴛʜ /hug ᴛᴏ ʜᴜɢ ᴛʜᴇᴍ!
 
-- /hug: Sᴇɴᴅs ᴀ ʜᴜɢɢɪɴɢ ᴀɴɪᴍᴀᴛɪᴏɴ.
-
-**Cᴏᴍᴍᴀɴᴅs**
-
-- /hug: Sᴇɴᴅs ᴀ ʜᴜɢɢɪɴɢ ᴀɴɪᴍᴀᴛɪᴏɴ. Iғ ᴜsᴇᴅ ᴀs ᴀ ʀᴇᴘʟʏ ᴛᴏ ᴀɴᴏᴛʜᴇʀ ᴍᴇssᴀɢᴇ, ɪᴛ ᴍᴇɴᴛɪᴏɴs ᴛʜᴇ sᴇɴᴅᴇʀ ᴀɴᴅ ʀᴇᴄɪᴘɪᴇɴᴛ ᴏғ ᴛʜᴇ ʜᴜɢ.
-
-**Hᴏᴡ ᴛᴏ Usᴇ**
-
-- Usᴇ /hug ᴛᴏ sᴇɴᴅ ᴀ ʜᴜɢɢɪɴɢ ᴀɴɪᴍᴀᴛɪᴏɴ.
-- Rᴇᴘʟʏ ᴛᴏ ᴀ ᴍᴇssᴀɢᴇ ᴡɪᴛʜ /ʜᴜ ᴛᴏ sᴇɴᴅ ᴀ ʜᴜɢɢɪɴɢ ᴀɴɪᴍᴀᴛɪᴏɴ ᴍᴇɴᴛɪᴏɴɪɴɢ ᴛʜᴇ sᴇɴᴅᴇʀ ᴀɴᴅ ʀᴇᴄɪᴘɪᴇɴᴛ.
-
-**Nᴏᴛᴇs**
-
-- Eɴsᴜʀᴇ ʏᴏᴜʀ ᴄʜᴀᴛ sᴇᴛᴛɪɴɢs ᴀʟʟᴏᴡ ᴛʜᴇ ʙᴏᴛ ᴛᴏ sᴇɴᴅ ᴠɪᴅᴇᴏs/sᴛɪᴄᴋᴇʀs ᴀs ʀᴇᴘʟɪᴇs ғᴏʀ ғᴜʟʟ ғᴜɴᴄᴛɪᴏɴᴀʟɪᴛʏ."""
+✨ **Nᴏᴛᴇ:**  
+Bᴏᴛ ᴍᴜsᴛ ʜᴀᴠᴇ ᴘᴇʀᴍɪssɪᴏɴ ᴛᴏ sᴇɴᴅ ɪᴍᴀɢᴇs ɪɴ ᴛʜᴇ ᴄʜᴀᴛ.
+"""
