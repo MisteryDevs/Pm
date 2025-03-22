@@ -35,7 +35,9 @@ async def start_comm(client, message: Message, _):
     try:
         vip = await message.reply_text("ᴅιиg ᴅσиg ꨄ︎❣️.....")
         for i in range(5):
-            await vip.edit_text(f"ᴅιиg ᴅσиg ꨄ︎{'.'  (5-i)}❣️{'.'  i}")
+            dots = "." * (5 - i)
+            extra_dots = "." * i
+            await vip.edit_text(f"ᴅιиg ᴅσиg ꨄ︎{dots}❣️{extra_dots}")
             await asyncio.sleep(0.2)
         await vip.delete()
 
@@ -49,13 +51,14 @@ async def start_comm(client, message: Message, _):
         await asyncio.sleep(0.2)
         await vips.delete()
 
-        # 🎭 Sticker Send & Delete (1 sec)
+        # 🎭 Sticker Send & Delete (3 sec)
         sticker = await client.send_sticker(
             chat_id=chat_id,
             sticker="CAACAgUAAx0CcSyO9gACl7dkQoL0p1vXqcYtCuCHmSyh4Hi1UgACEwgAAonAEVYwaJ0Jkk8L0B4E"
         )
         await asyncio.sleep(3)
         await sticker.delete()
+        await asyncio.sleep(0.5)  # Sticker delete के बाद pause
 
     except Exception as e:
         print(f"Error in animation: {e}")
