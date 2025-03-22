@@ -29,7 +29,7 @@ async def start_comm(client, message: Message, _):
     await add_served_user(message.from_user.id)
 
     # 🕊️ Auto Reaction on /start
-    await message.react("👿")
+    await message.react("🕊️")
 
     # 🎭 Typing Effect - Ding Dong
     try:
