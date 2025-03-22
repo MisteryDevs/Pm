@@ -9,7 +9,6 @@ gitpython
 hachoir
 heroku3
 motor
-nekos
 pillow==10.0.1
 psutil
 py-tgcalls==0.9.7
@@ -33,3 +32,4 @@ pyfiglet
 qrcode
 pymongo[srv]
 gtts
+nekos
