@@ -246,3 +246,25 @@ HELP_23 = ''' Ꮢᴇᴀᴄᴛɪᴏɴ
 
 🔹 ᴜsᴇ ᴛᴏ ᴄᴏᴍᴍᴀɴᴅ ᴛᴏ ᴇɴʜᴀɴᴄᴇ ɪɴᴛᴇʀᴀᴄᴛɪᴏɴ ɪɴ ʏᴏᴜʀ ɢʀᴏᴜᴘ ᴀɴᴅ ᴄʀᴇᴀᴛᴇ ᴀ ᴍᴏʀᴇ ᴇɴɢᴀɢɪɴɢ ᴄʜᴀᴛ ᴇxᴘᴇʀɪᴇɴᴄᴇ !. 
 '''
+
+HELP_24 = ''' Tᴀɢ
+
+Tᴀɢ ᴄᴏᴍᴍᴀɴᴅꜱ:
+
+✿ ᴄʜᴏᴏsᴇ ᴛᴀɢ ɪɴ ʏᴏᴜʀ ᴄʜᴀᴛ ✿
+
+๏ /gmtag ➛ ɢᴏᴏᴅ ᴍᴏʀɴɪɴɢ 
+ᴛᴀɢ sᴛᴏᴘ ⇴ /cancelgmtag ᴀɴᴅ /gmtagoff
+
+๏ /gntag ➛ ɢᴏᴏᴅ ɴɪɢʜᴛ ᴛᴀɢ sᴛᴏᴘ ⇴/cancelgntag ᴀɴᴅ /gntagoff
+
+๏ /tagall ➛ ʀᴀɴᴅᴏᴍ ᴍᴇssᴀɢᴇ ᴛᴀɢ sᴛᴏᴘ ⇴ /tagoff /tagstop
+
+๏ /hiitag ➛ ʀᴀɴᴅᴏᴍ ʜɪɴᴅɪ ᴍᴇssᴀɢᴇ ᴛᴀɢ sᴛᴏᴘ ⇴/cancelhiitag ᴀɴᴅ /hiitagoff
+
+๏ /shayari ➛ ʀᴀɴᴅᴏᴍ sʜᴀʏᴀʀɪ ᴛᴀɢ sᴛᴏᴘ ⇴ /cancelshayari ᴀɴᴅ /shayarioff
+
+๏ /utag ➛ ᴀɴʏ ᴡʀɪᴛᴛᴇɴ ᴛᴇxᴛ ᴛᴀɢ sᴛᴏᴘ ⇴ /cancel 
+
+๏ /vctag ➛ ᴠᴏɪᴄᴇ ᴄʜᴀᴛ ɪɴᴠɪᴛᴇ ᴛᴀɢ sᴛᴏᴘ ⇴ /vcstop
+'''
