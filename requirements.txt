@@ -32,3 +32,4 @@ pyfiglet
 qrcode
 pymongo[srv]
 gtts
+CWMUSIC
