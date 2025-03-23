@@ -8,6 +8,7 @@ ffmpeg-python
 gitpython
 hachoir
 heroku3
+telebot
 motor
 pillow==10.0.1
 psutil
