@@ -11,11 +11,15 @@ import datetime
 from SONALI import app
 
 
+import datetime
+from SONALI import app
+
+
 def mention(user, name, mention=True):
     if mention:
-        link = f"[{name}](tg://user?id={user})"  # Correct mention format
+        link = f"<a href='tg://user?id={user}'>{name}</a>"
     else:
-        link = f"[{name}](https://t.me/{user})"  # Direct profile link
+        link = f"<a href='https://t.me/{user}'>{name}</a>"
     return link
 
 
@@ -25,8 +29,7 @@ async def get_userid_from_username(username):
     except:
         return None
 
-    user_obj = [user.id, user.first_name]
-    return user_obj
+    return [user.id, user.first_name]
 
 
 async def ban_user(
