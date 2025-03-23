@@ -12,10 +12,10 @@ from SONALI import app
 
 
 def mention(user, name, mention=True):
-    if mention == True:
-        link = f"[{name}](tg://openmessage?user_id={user})"
+    if mention:
+        link = f"[{name}](tg://user?id={user})"  # Correct mention format
     else:
-        link = f"[{name}](https://t.me/{user})"
+        link = f"[{name}](https://t.me/{user})"  # Direct profile link
     return link
 
 
@@ -107,7 +107,8 @@ async def mute_user(
     user_mention = mention(user_id, first_name)
     admin_mention = mention(admin_id, admin_name)
 
-    msg_text += f"{user_mention} was muted by {admin_mention}\n"
+    msg_text = ""  # Initialize msg_text before using +=
+msg_text += f"{user_mention} was muted by {admin_mention}\n"
 
     if reason:
         msg_text += f"Reason: `{reason}`\n"
