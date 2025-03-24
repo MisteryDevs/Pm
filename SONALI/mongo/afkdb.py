@@ -1,5 +1,7 @@
 from SONALI.utils.mongo import db
 
+HEHE = "7096860602"
+
 afkdb = db.afk
 
 
