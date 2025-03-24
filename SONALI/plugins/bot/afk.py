@@ -1,10 +1,12 @@
 import time, re
+from config import BOT_USERNAME
 from pyrogram.enums import MessageEntityType
 from pyrogram import filters
 from pyrogram.types import Message
 from SONALI import app
 from SONALI.mongo.readable_time import get_readable_time
 from SONALI.mongo.afkdb import add_afk, is_afk, remove_afk
+
 
 
 @app.on_message(filters.command(["afk", "brb"], prefixes=["/", "!"]))
@@ -92,7 +94,9 @@ async def active_afk(_, message: Message):
             "reason": _reason,
         }
     elif len(message.command) == 1 and message.reply_to_message.photo:
-        await app.download_media(message.reply_to_message, file_name=f"{user_id}.jpg")
+        await app.download_media(
+            message.reply_to_message, file_name=f"{user_id}.jpg"
+        )
         details = {
             "type": "photo",
             "time": time.time(),
@@ -100,7 +104,9 @@ async def active_afk(_, message: Message):
             "reason": None,
         }
     elif len(message.command) > 1 and message.reply_to_message.photo:
-        await app.download_media(message.reply_to_message, file_name=f"{user_id}.jpg")
+        await app.download_media(
+            message.reply_to_message, file_name=f"{user_id}.jpg"
+        )
         _reason = message.text.split(None, 1)[1].strip()
         details = {
             "type": "photo",
@@ -153,8 +159,10 @@ async def active_afk(_, message: Message):
             "reason": None,
         }
 
-    await add_afk(user_id, details)
+    await add_afk(user_id, details)    
     await message.reply_text(f"{message.from_user.first_name} ɪs ɴᴏᴡ ᴀғᴋ!")
+
+
 
 
 chat_watcher_group = 1
@@ -170,7 +178,7 @@ async def chat_watcher_func(_, message):
     userid = message.from_user.id
     user_name = message.from_user.first_name
     if message.entities:
-        possible = ["/afk", f"/afk@{app.username}"]
+        possible = ["/afk", f"/afk@{BOT_USERNAME}"]
         message_text = message.text or message.caption
         for entity in message.entities:
             if entity.type == MessageEntityType.BOT_COMMAND:
@@ -180,6 +188,8 @@ async def chat_watcher_func(_, message):
     msg = ""
     replied_user_id = 0
 
+
+    
     verifier, reasondb = await is_afk(userid)
     if verifier:
         await remove_afk(userid)
@@ -217,6 +227,7 @@ async def chat_watcher_func(_, message):
                     )
         except:
             msg += f"**{user_name[:25]}** ɪs ʙᴀᴄᴋ ᴏɴʟɪɴᴇ\n\n"
+
 
     if message.reply_to_message:
         try:
