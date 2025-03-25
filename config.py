@@ -25,16 +25,17 @@ LOGGER_ID = int(getenv("LOGGER_ID", "0"))  # Fixed None issue
 
 OWNER_ID = int(getenv("OWNER_ID", "7096860602"))  # Fixed None issue
 
+
 # Heroku deployment settings
 HEROKU_APP_NAME = getenv("HEROKU_APP_NAME", None) or "my_default_app"
 HEROKU_API_KEY = getenv("HEROKU_API_KEY", None) or "your_default_api_key"
 
-UPSTREAM_REPO = getenv("UPSTREAM_REPO", "https://github.com/princesinff/ALPHA_MUSIC")
+UPSTREAM_REPO = getenv("UPSTREAM_REPO", "https://github.com/MisteryDevs/Pm")
 UPSTREAM_BRANCH = getenv("UPSTREAM_BRANCH", "main")
 GIT_TOKEN = getenv("GIT_TOKEN", None)  # Only required if repo is private
 
-SUPPORT_CHANNEL = getenv("SUPPORT_CHANNEL", "https://t.me/SWEETY_BOT_UPDATE")
-SUPPORT_CHAT = getenv("SUPPORT_CHAT", "https://t.me/APNA_CLUB_09")
+SUPPORT_CHANNEL = getenv("SUPPORT_CHANNEL", "https://t.me/Ur_Rishu_143")
+SUPPORT_CHAT = getenv("SUPPORT_CHAT", "https://t.me/Ur_Support07")
 
 AUTO_LEAVING_ASSISTANT = bool(getenv("AUTO_LEAVING_ASSISTANT", "False"))
 
