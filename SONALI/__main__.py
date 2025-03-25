@@ -50,7 +50,7 @@ async def init():
         pass
     await Sona.decorators()
     LOGGER("SONALI").info(
-        "DROP YOUR GIRLFRIEND'S NUMBER AND SEXY PIC TO @PRINCE_WEBZ , @APNA_CLUB_09 FOR ANY ISSUES MADE BY SWEETY"
+        "Bot Started Successful "
     )
     await idle()
     await app.stop()
