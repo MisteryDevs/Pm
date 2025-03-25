@@ -28,7 +28,7 @@ async def brah3(_, message: Message):
             except Exception:
                 continue
         
-        await message.reply(invited_text, parse_mode="html")
+        await message.reply(invited_text, parse_mode="HTML")  # Fixed parse_mode
 
 # ✅ Math Calculation Command
 @app.on_message(filters.command("math", prefixes="/"))
